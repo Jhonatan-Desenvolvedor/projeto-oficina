@@ -1,0 +1,38 @@
+<div class="container">
+  <div class="card">
+    <h2><i class="fas fa-car"></i> Cadastrar Novo Veículo</h2>
+    
+    <div class="form-group">
+      <label>Proprietário (Cliente):</label>
+      <select [(ngModel)]="clienteSelecionadoId">
+        <option [ngValue]="null">-- Selecione o Cliente --</option>
+        @for (c of clientesDisponiveis(); track c.id) {
+          <option [value]="c.id">{{ c.nome }} ({{ c.telefone }})</option>
+        }
+      </select>
+    </div>
+
+    <div class="grid">
+      <div class="field">
+        <label>Marca:</label>
+        <input [(ngModel)]="veiculo().marca" placeholder="Ex: Honda" />
+      </div>
+      <div class="field">
+        <label>Modelo:</label>
+        <input [(ngModel)]="veiculo().modelo" placeholder="Ex: Civic" />
+      </div>
+      <div class="field">
+        <label>Placa:</label>
+        <input [(ngModel)]="veiculo().placa" placeholder="ABC-1234" />
+      </div>
+      <div class="field">
+        <label>Ano:</label>
+        <input type="number" [(ngModel)]="veiculo().ano" />
+      </div>
+    </div>
+
+    <button class="btn-save" (click)='salvarVeiculo()'>
+      VINCULAR VEÍCULO AO CLIENTE
+    </button>
+  </div>
+</div>

@@ -1,0 +1,15 @@
+.cadastro-container { max-width: 800px; margin: 20px auto; font-family: 'Segoe UI', sans-serif; }
+.card { background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); margin-bottom: 20px; }
+.input-group { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
+.full { grid-column: span 2; }
+input { padding: 12px; border: 1px solid #ddd; border-radius: 6px; font-size: 14px; }
+
+.veiculo-form { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; background: #f8f9fa; padding: 15px; border-radius: 6px; }
+.btn-add { background: #3498db; color: white; border: none; padding: 10px; border-radius: 6px; cursor: pointer; }
+
+.table { width: 100%; border-collapse: collapse; margin-top: 15px; }
+.table th { text-align: left; border-bottom: 2px solid #eee; padding: 10px; }
+.table td { padding: 10px; border-bottom: 1px solid #eee; }
+
+.btn-del { background: #e74c3c; color: white; border: none; padding: 5px 10px; border-radius: 4px; }
+.btn-finalizar { width: 100%; padding: 15px; background: #27ae60; color: white; border: none; border-radius: 8px; font-size: 18px; font-weight: bold; cursor: pointer; }

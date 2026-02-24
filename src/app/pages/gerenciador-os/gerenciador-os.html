@@ -1,0 +1,94 @@
+<div class="container">
+  <h2>Ordens de Serviço</h2>
+
+  <div class="acoes">
+    <button (click)="carregarOrdens()" class="btn-atualizar">Atualizar Lista</button>
+  </div>
+
+  <!-- Carregando -->
+  <div *ngIf="carregando()" class="loading">
+    Carregando ordens de serviço...
+  </div>
+
+  <!-- Erro -->
+  <div *ngIf="erro()" class="erro">
+    {{ erro() }}
+  </div>
+
+  <!-- Tabela -->
+  <table *ngIf="!carregando() && !erro() && ordens().length > 0" class="tabela-os">
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Cliente</th>
+        <th>Veículo</th>
+        <th>Valor Total</th>
+        <th>Status</th>
+        <th>Ações</th>
+      </tr>
+    </thead>
+    <tbody>
+      @for (os of ordens(); track os.id) {
+        <tr>
+          <td>{{ os.id }}</td>
+          <td>{{ os.cliente?.nome}}</td>
+          <td>{{ os.veiculo?.placa}} {{ os.veiculo?.modelo ? '(' + os.veiculo.modelo + ')' : '' }}</td>
+          <td>R$ {{ os.valorTotal?.toFixed(2) || '0.00' }}</td>
+          <td>
+<span class="status-badge" [ngClass]="(os.status + '').toLowerCase()">              {{ os.status || 'N/D' }}
+            </span>
+          </td>
+          <td>
+            <button class="btn-editar" (click)="editarOs(os)">Editar</button>
+            <button class="btn-excluir" (click)="excluirOs(os)">Excluir</button>
+          </td>
+        </tr>
+      }
+    </tbody>
+  </table>
+
+  <!-- Sem registros -->
+  <p *ngIf="!carregando() && !erro() && ordens().length === 0" class="sem-registros">
+    Nenhuma ordem de serviço encontrada.
+  </p>
+</div>
+
+<div class="modal-overlay" *ngIf="osSelecionada()">
+  <div class="modal-content">
+    <h3>Editar Ordem de Serviço #{{ osSelecionada()?.id }}</h3>
+    
+    <form (submit)="salvarEdicao($event)">
+      <div class="grid-form">
+        <div class="campo">
+          <label>Cliente:</label>
+          <input type="text" [value]="osSelecionada()?.cliente?.nome" disabled>
+        </div>
+
+        <div class="campo">
+          <label>Veículo (Placa):</label>
+          <input type="text" [value]="osSelecionada()?.veiculo?.placa" disabled>
+        </div>
+
+        <div class="campo">
+          <label>Status:</label>
+          <select [(ngModel)]="osSelecionada()!.status" name="status">
+            <option value="ABERTO">ABERTO</option>
+            <option value="FECHADO">FECHADO</option>
+          </select>
+        </div>
+
+        <div class="campo">
+          <label>Valor Total (R$):</label>
+          <input type="number" step="0.01" [(ngModel)]="osSelecionada()!.valorTotal" name="valorTotal">
+        </div>
+      </div>
+
+ 
+
+      <div class="modal-acoes">
+        <button type="button" (click)="fecharModal()" class="btn-cancelar">Cancelar</button>
+        <button type="submit" class="btn-salvar">Salvar Alterações</button>
+      </div>
+    </form>
+  </div>
+</div>

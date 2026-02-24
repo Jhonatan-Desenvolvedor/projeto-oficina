@@ -1,0 +1,113 @@
+<div class="os-container">
+  <h2><i class="fas fa-file-invoice"></i> Gerar Ordem de Serviço</h2>
+
+  <div class="section-group">
+    <div class="section">
+      <label>Cliente:</label>
+      <select [(ngModel)]="clienteId" (ngModelChange)="onClienteChange()" name="cliente">
+        <option [ngValue]="null">Selecione o Cliente</option>
+        @for (c of clientes(); track c.id) {
+          <option [value]="c.id">{{ c.nome }}</option>
+        }
+      </select>
+    </div>
+
+    <div class="section">
+      <label>Veículo:</label>
+      <select [(ngModel)]="veiculoId" name="veiculo" [disabled]="!clienteId() || veiculosFiltrados().length === 0">
+        <option [ngValue]="null">
+          @if (!clienteId()) { Selecione um cliente primeiro }
+          @else if (veiculosFiltrados().length === 0) { Nenhum veículo encontrado }
+          @else { Selecione o Veículo }
+        </option>
+        @for (v of veiculosFiltrados(); track v.id) {
+          <option [value]="v.id">{{ v.marca }} {{ v.modelo }} - {{ v.placa }}</option>
+        }
+      </select>
+    </div>
+  </div>
+
+  <div class="grid">
+    <div class="box">
+      <h3><i class="fas fa-box"></i> Adicionar Produtos</h3>
+      <div class="input-row">
+        <select #pSel>
+          <option value="" disabled selected>Escolha um produto...</option>
+          @for (p of produtosDB(); track p.id) {
+            <option [value]="p.id" 
+                    [attr.data-preco]="p.precoProduto" 
+                    [attr.data-nome]="p.nomeProduto">
+              {{ p.nomeProduto }} - R$ {{ p.precoProduto }}
+            </option>
+          }
+        </select>
+        <button type="button" class="btn-add" (click)="adicionarProduto(pSel)">
+          <i class="fas fa-plus"></i>
+        </button>
+      </div>
+    </div>
+
+    <div class="box">
+      <h3><i class="fas fa-wrench"></i> Adicionar Serviço Manual</h3>
+      <div class="manual-service-form">
+        <input type="text" 
+               #descServ 
+               placeholder="Descrição do serviço (ex: Troca de Freio)" 
+               class="input-text-field">
+        
+        <div class="input-row">
+          <input type="number" 
+                 #valorServ 
+                 placeholder="Preço R$" 
+                 class="input-price-field">
+          
+          <button type="button" 
+                  class="btn-add" 
+                  (click)="adicionarServicoManual(descServ, valorServ)">
+            <i class="fas fa-plus"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="resumo">
+    <h4><i class="fas fa-list-ul"></i> Itens Adicionados:</h4>
+    
+    <div class="lista-itens">
+      <ul>
+        @for (prod of produtosSelecionados(); track $index) {
+          <li class="item-linha">
+            <span><span class="tag p">P</span> {{ prod.nome }}</span>
+            <span class="preco">R$ {{ prod.preco.toFixed(2) }}</span>
+          </li>
+        }
+
+        @for (serv of servicosSelecionados(); track $index) {
+          <li class="item-linha">
+            <span><span class="tag s">S</span> {{ serv.nome }}</span>
+            <span class="preco">R$ {{ serv.preco.toFixed(2) }}</span>
+          </li>
+        }
+
+        @if (produtosSelecionados().length === 0 && servicosSelecionados().length === 0) {
+          <li class="vazio">Nenhum item adicionado à lista.</li>
+        }
+      </ul>
+    </div>
+
+    <div class="footer-os">
+      <div class="total-box">
+        <span>VALOR TOTAL:</span>
+        <strong class="valor-total">R$ {{ total().toFixed(2) }}</strong>
+      </div>
+      
+      <button type="button"
+              class="btn-save" 
+              (click)="salvar()" 
+              [disabled]="!clienteId() || !veiculoId() || total() <= 0">
+        <i class="fas fa-save"></i> GRAVAR ORDEM DE SERVIÇO
+      </button>
+    </div>
+  </div>
+</div>

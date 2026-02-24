@@ -1,0 +1,12 @@
+.crud-container { max-width: 900px; margin: 20px auto; padding: 0 20px; }
+.card { background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); margin-bottom: 20px; }
+.form-grid { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 10px; align-items: end; }
+input { padding: 10px; border: 1px solid #ddd; border-radius: 4px; }
+
+table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+th { text-align: left; background: #f4f4f4; padding: 12px; }
+td { padding: 12px; border-bottom: 1px solid #eee; }
+
+.btn-save { background: #27ae60; color: white; border: none; padding: 10px; border-radius: 4px; cursor: pointer; }
+.btn-edit { background: #3498db; color: white; border: none; padding: 5px 10px; border-radius: 4px; margin-right: 5px; cursor: pointer; }
+.btn-delete { background: #e74c3c; color: white; border: none; padding: 5px 10px; border-radius: 4px; cursor: pointer; }

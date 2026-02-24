@@ -1,0 +1,72 @@
+<!-- Botão de logout / limpar token -->
+<div class="header-actions">
+  <button class="btn-token-limpar" (click)="logout()">
+    <i class="fas fa-trash"></i> Limpar Token / Sair
+  </button>
+</div>
+
+<!-- Título do Dashboard -->
+<h1 class="dashboard-title">Dashboard - Controle de Oficina</h1>
+
+<!-- Área de navegação rápida -->
+<div class="navegacao-dashboard">
+  <h2>Acesso Rápido</h2>
+  
+  <div class="botoes-grid">
+    <button class="btn-navegacao primary" routerLink="/cadastro-os">
+      <i class="fas fa-file-invoice-dollar"></i>
+      <span>Nova Ordem de Serviço</span>
+    </button>
+
+    <button class="btn-navegacao success" routerLink="/produtos">
+      <i class="fas fa-boxes-stacked"></i>
+      <span>Gerenciar Produtos</span>
+    </button>
+
+    <button class="btn-navegacao info" routerLink="/cadastro-veiculo">
+      <i class="fas fa-car-side"></i>
+      <span>Cadastrar / Editar Veículos</span>
+    </button>
+
+    <button class="btn-navegacao warning" routerLink="/cadastro-cliente">
+      <i class="fas fa-user-plus"></i>
+      <span>Cadastrar / Editar Clientes</span>
+    </button>
+  </div>
+</div>
+
+<!-- Cards de informações -->
+<div class="dashboard-grid">
+  <div class="card faturamento">
+    <div class="icon">
+      <i class="fas fa-money-bill-wave"></i>
+    </div>
+    <div class="data">
+      <span>Total em OS Fechadas</span>
+      <h3>R$ {{ faturamentoTotal().toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) }}</h3>
+    </div>
+  </div>
+
+  <div class="card status-ok">
+    <div class="icon">
+      <i class="fas fa-check-circle"></i>
+    </div>
+    <div class="data">
+      <span>Metas do Mês</span>
+      <p>Operação Ativa</p>
+      <!-- Você pode adicionar mais informações aqui depois, ex: % de meta -->
+    </div>
+  </div>
+
+  <!-- Você pode adicionar mais cards aqui no futuro -->
+  <!-- Exemplo: -->
+  <!-- 
+  <div class="card os-abertas">
+    <div class="icon"><i class="fas fa-tools"></i></div>
+    <div class="data">
+      <span>OS Abertas Hoje</span>
+      <h3>12</h3>
+    </div>
+  </div>
+  -->
+</div>

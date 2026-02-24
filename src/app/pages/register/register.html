@@ -1,0 +1,13 @@
+<div class="register-card">
+  <h2>Registrar Conta</h2>
+
+  <form (ngSubmit)="register()">
+    <input [(ngModel)]="username" name="username" placeholder="Usuário" required>
+    <input [(ngModel)]="password" name="password" placeholder="Senha" type="password" required>
+    <input [(ngModel)]="confirmPassword" name="confirmPassword" placeholder="Confirme a Senha" type="password" required>
+
+    <button type="submit" [disabled]="!username || password !== confirmPassword">
+      CRIAR CONTA
+    </button>
+  </form>
+</div>
