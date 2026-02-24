@@ -9,18 +9,20 @@
 
   <div class="card veiculo-add">
     <h3>Veículo</h3>
-    <input [ngModel]="veiculoTemp().marca" (ngModelChange)="veiculoTemp.set({...veiculoTemp(), marca: $event})" placeholder="Marca">
-    <input [ngModel]="veiculoTemp().placa" (ngModelChange)="veiculoTemp.set({...veiculoTemp(), placa: $event})" placeholder="Placa">
-    
+    <input [ngModel]="veiculoTemp().marca" (ngModelChange)="veiculoTemp.set({...veiculoTemp(), marca: $event})"
+      placeholder="Marca">
+    <input [ngModel]="veiculoTemp().placa" (ngModelChange)="veiculoTemp.set({...veiculoTemp(), placa: $event})"
+      placeholder="Placa">
+
     <button type="button" (click)="addVeiculo()">Adicionar Veículo</button>
   </div>
 
   <div class="lista-veiculos">
     @for (v of listaVeiculos(); track v.placa) {
-      <div class="veiculo-item">
-        {{ v.marca }} - {{ v.placa }} 
-        <button (click)="removerVeiculo($index)">remover</button>
-      </div>
+    <div class="veiculo-item">
+      {{ v.marca }} - {{ v.placa }}
+      <button (click)="removerVeiculo($index)">remover</button>
+    </div>
     }
   </div>
 

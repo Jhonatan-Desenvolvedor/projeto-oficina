@@ -11,7 +11,7 @@
 <!-- Área de navegação rápida -->
 <div class="navegacao-dashboard">
   <h2>Acesso Rápido</h2>
-  
+
   <div class="botoes-grid">
     <button class="btn-navegacao primary" routerLink="/cadastro-os">
       <i class="fas fa-file-invoice-dollar"></i>
@@ -43,7 +43,8 @@
     </div>
     <div class="data">
       <span>Total em OS Fechadas</span>
-      <h3>R$ {{ faturamentoTotal().toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) }}</h3>
+      <h3>R$ {{ faturamentoTotal().toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) }}
+      </h3>
     </div>
   </div>
 

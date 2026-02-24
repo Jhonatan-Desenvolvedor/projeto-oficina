@@ -17,19 +17,19 @@ export class RegisterComponent {
   confirmPassword = '';
 
 
-  constructor(private http: HttpClient, private router: Router) {}
+  constructor(private http: HttpClient, private router: Router) { }
 
   register() {
-  if (this.password !== this.confirmPassword) {
-    alert('As senhas não conferem!');
-    return;
-  }
+    if (this.password !== this.confirmPassword) {
+      alert('As senhas não conferem!');
+      return;
+    }
 
-  const payload = {
-    username: this.username,
-    password: this.password,
+    const payload = {
+      username: this.username,
+      password: this.password,
 
-  };
+    };
 
     this.http.post<any>('http://localhost:8080/auth/register', payload)
       .subscribe({

@@ -29,20 +29,20 @@
     </thead>
     <tbody>
       @for (os of ordens(); track os.id) {
-        <tr>
-          <td>{{ os.id }}</td>
-          <td>{{ os.cliente?.nome}}</td>
-          <td>{{ os.veiculo?.placa}} {{ os.veiculo?.modelo ? '(' + os.veiculo.modelo + ')' : '' }}</td>
-          <td>R$ {{ os.valorTotal?.toFixed(2) || '0.00' }}</td>
-          <td>
-<span class="status-badge" [ngClass]="(os.status + '').toLowerCase()">              {{ os.status || 'N/D' }}
-            </span>
-          </td>
-          <td>
-            <button class="btn-editar" (click)="editarOs(os)">Editar</button>
-            <button class="btn-excluir" (click)="excluirOs(os)">Excluir</button>
-          </td>
-        </tr>
+      <tr>
+        <td>{{ os.id }}</td>
+        <td>{{ os.cliente?.nome}}</td>
+        <td>{{ os.veiculo?.placa}} {{ os.veiculo?.modelo ? '(' + os.veiculo.modelo + ')' : '' }}</td>
+        <td>R$ {{ os.valorTotal?.toFixed(2) || '0.00' }}</td>
+        <td>
+          <span class="status-badge" [ngClass]="(os.status + '').toLowerCase()"> {{ os.status || 'N/D' }}
+          </span>
+        </td>
+        <td>
+          <button class="btn-editar" (click)="editarOs(os)">Editar</button>
+          <button class="btn-excluir" (click)="excluirOs(os)">Excluir</button>
+        </td>
+      </tr>
       }
     </tbody>
   </table>
@@ -56,7 +56,7 @@
 <div class="modal-overlay" *ngIf="osSelecionada()">
   <div class="modal-content">
     <h3>Editar Ordem de Serviço #{{ osSelecionada()?.id }}</h3>
-    
+
     <form (submit)="salvarEdicao($event)">
       <div class="grid-form">
         <div class="campo">
@@ -83,7 +83,7 @@
         </div>
       </div>
 
- 
+
 
       <div class="modal-acoes">
         <button type="button" (click)="fecharModal()" class="btn-cancelar">Cancelar</button>

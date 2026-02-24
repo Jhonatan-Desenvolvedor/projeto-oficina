@@ -12,7 +12,7 @@ import { DataService } from '../../services/data.service';
 })
 export class ProdutoComponent {
   private dataService = inject(DataService);
-  
+
   produtos = signal<any[]>([]);
   produtoAtual = signal({ id: null, nomeProduto: '', precoProduto: 0, quantidadeEstoque: 0, descricao: '' });
   editando = signal(false);
@@ -26,31 +26,31 @@ export class ProdutoComponent {
   }
 
   salvar() {
-  const p = this.produtoAtual();
+    const p = this.produtoAtual();
 
-  if (this.editando() && p.id !== null) {
-    // Verificamos se o id não é null antes de passar para o service
-    if (p.id !== null) {
-      this.dataService.updateProduto(p.id, p).subscribe({
-        next: () => {
-          alert('Produto atualizado com sucesso!');
-          this.resetar();
-        },
-        error: (err) => console.error(err)
-      });
-    } else {
-      alert('Erro: ID do produto não encontrado para edição.');
-    }
-  } else {
-    // Cadastro de novo produto (ID costuma ser null aqui, e o banco gera um novo)
-    this.dataService.saveProduto(p).subscribe({
-      next: () => {
-        alert('Produto cadastrado com sucesso!');
-        this.resetar();
+    if (this.editando() && p.id !== null) {
+      // Verificamos se o id não é null antes de passar para o service
+      if (p.id !== null) {
+        this.dataService.updateProduto(p.id, p).subscribe({
+          next: () => {
+            alert('Produto atualizado com sucesso!');
+            this.resetar();
+          },
+          error: (err) => console.error(err)
+        });
+      } else {
+        alert('Erro: ID do produto não encontrado para edição.');
       }
-    });
+    } else {
+      // Cadastro de novo produto (ID costuma ser null aqui, e o banco gera um novo)
+      this.dataService.saveProduto(p).subscribe({
+        next: () => {
+          alert('Produto cadastrado com sucesso!');
+          this.resetar();
+        }
+      });
+    }
   }
-}
 
   prepararEdicao(p: any) {
     this.produtoAtual.set({ ...p });

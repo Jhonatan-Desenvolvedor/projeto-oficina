@@ -33,24 +33,24 @@ export class VeiculoFormComponent {
     this.dataService.getClientes().subscribe(res => this.clientesDisponiveis.set(res));
   }
 
-salvarVeiculo() {
-  const cid = this.clienteSelecionadoId();
-  const v = this.veiculo();
+  salvarVeiculo() {
+    const cid = this.clienteSelecionadoId();
+    const v = this.veiculo();
 
-  if (!cid) {
-    alert('Selecione um cliente!');
-    return;
+    if (!cid) {
+      alert('Selecione um cliente!');
+      return;
+    }
+
+    // Chamamos o serviço passando o ID separadamente para a URL
+    this.dataService.saveVeiculoComCliente(cid, v).subscribe({
+      next: () => {
+        alert('Veículo cadastrado com sucesso!');
+        this.resetar();
+      },
+      error: (err) => console.error(err)
+    });
   }
-
-  // Chamamos o serviço passando o ID separadamente para a URL
-  this.dataService.saveVeiculoComCliente(cid, v).subscribe({
-    next: () => {
-      alert('Veículo cadastrado com sucesso!');
-      this.resetar();
-    },
-    error: (err) => console.error(err)
-  });
-}
 
   private resetar() {
     this.veiculo.set({ marca: '', modelo: '', placa: '', cor: '', ano: 2026 });

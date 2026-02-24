@@ -15,9 +15,9 @@ export class DataService {
 
   //produtos
   getProdutos() { return this.http.get<any[]>(`${this.API_URL}/produtos`, { withCredentials: true }); }
-saveProduto(p: any) { return this.http.post(`${this.API_URL}/produtos`, p, { withCredentials: true }); }
-updateProduto(id: number, p: any) { return this.http.put(`${this.API_URL}/produtos/${id}`, p, { withCredentials: true }); }
-deleteProduto(id: number) { return this.http.delete(`${this.API_URL}/produtos/${id}`, { withCredentials: true }); }
+  saveProduto(p: any) { return this.http.post(`${this.API_URL}/produtos`, p, { withCredentials: true }); }
+  updateProduto(id: number, p: any) { return this.http.put(`${this.API_URL}/produtos/${id}`, p, { withCredentials: true }); }
+  deleteProduto(id: number) { return this.http.delete(`${this.API_URL}/produtos/${id}`, { withCredentials: true }); }
 
   //veiculos
   getVeiculos() { return this.http.get<Veiculo[]>(`${this.API_URL}/veiculos`, { withCredentials: true }); }
@@ -28,7 +28,7 @@ deleteProduto(id: number) { return this.http.delete(`${this.API_URL}/produtos/${
   //clientes
   getClientes() { return this.http.get<Cliente[]>(`${this.API_URL}/clientes`, { withCredentials: true }); }
   saveCliente(cliente: Cliente) {
-    return this.http.post(`${this.API_URL}/clientes`, cliente, { 
+    return this.http.post(`${this.API_URL}/clientes`, cliente, {
       withCredentials: true // ISSO É VITAL PARA O JWT EM COOKIES
     });
   }
@@ -40,49 +40,49 @@ deleteProduto(id: number) { return this.http.delete(`${this.API_URL}/produtos/${
 
   //ordens de servico
   getOrdensServico() { return this.http.get<OrdemServico[]>(`${this.API_URL}/ordens-servico`, { withCredentials: true }); }
-  saveOrdemServico(os: OrdemServico) { 
-    return this.http.post<OrdemServico>(`${this.API_URL}/ordens-servico`, os, { withCredentials: true }); 
+  saveOrdemServico(os: OrdemServico) {
+    return this.http.post<OrdemServico>(`${this.API_URL}/ordens-servico`, os, { withCredentials: true });
   }
   updateOrdemServico(id: number, os: OrdemServico) { return this.http.put(`${this.API_URL}/ordens-servico/${id}`, os, { withCredentials: true }); }
   deleteOrdemServico(id: number) { return this.http.delete(`${this.API_URL}/ordens-servico/${id}`, { withCredentials: true }); }
 
-  
-  
-
-
-
-saveVeiculoComCliente(clienteId: number, veiculo: Veiculo) {
-  // Bate exatamente com: @PostMapping("/cliente/{clienteId}")
-  return this.http.post<Veiculo>(
-    `${this.API_URL}/veiculos/cliente/${clienteId}`, 
-    veiculo, 
-    { withCredentials: true }
-  );
-}
 
 
 
 
-  
- getVeiculosPorCliente(clienteId: number) {
+
+  saveVeiculoComCliente(clienteId: number, veiculo: Veiculo) {
+    // Bate exatamente com: @PostMapping("/cliente/{clienteId}")
+    return this.http.post<Veiculo>(
+      `${this.API_URL}/veiculos/cliente/${clienteId}`,
+      veiculo,
+      { withCredentials: true }
+    );
+  }
+
+
+
+
+
+  getVeiculosPorCliente(clienteId: number) {
     return this.http.get<Veiculo[]>(`${this.API_URL}/veiculos/cliente/${clienteId}`, { withCredentials: true });
   }
 
   getFaturamentoTotal() {
-  return this.http.get<number>(`${this.API_URL}/ordens/faturamento`, { withCredentials: true });
-}
+    return this.http.get<number>(`${this.API_URL}/ordens/faturamento`, { withCredentials: true });
+  }
 
   // No seu auth.service.ts ou data.service.ts
-    limparTokenESair() {
-  // 1. Remove qualquer dado de usuário do localStorage/sessionStorage
-  localStorage.clear();
-  sessionStorage.clear();
+  limparTokenESair() {
+    // 1. Remove qualquer dado de usuário do localStorage/sessionStorage
+    localStorage.clear();
+    sessionStorage.clear();
 
-  // 2. Opcional: Se você não estiver usando HttpOnly, pode tentar limpar via JS:
-  document.cookie = "accessToken=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+    // 2. Opcional: Se você não estiver usando HttpOnly, pode tentar limpar via JS:
+    document.cookie = "accessToken=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
 
-  // 3. Redireciona para o login para forçar uma nova autenticação
-  alert('Sessão encerrada ou token inválido. Por favor, faça login novamente.');
-  window.location.href = '/login'; 
-}
+    // 3. Redireciona para o login para forçar uma nova autenticação
+    alert('Sessão encerrada ou token inválido. Por favor, faça login novamente.');
+    window.location.href = '/login';
+  }
 }

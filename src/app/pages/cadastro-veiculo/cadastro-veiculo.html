@@ -1,13 +1,13 @@
 <div class="container">
   <div class="card">
     <h2><i class="fas fa-car"></i> Cadastrar Novo Veículo</h2>
-    
+
     <div class="form-group">
       <label>Proprietário (Cliente):</label>
       <select [(ngModel)]="clienteSelecionadoId">
         <option [ngValue]="null">-- Selecione o Cliente --</option>
         @for (c of clientesDisponiveis(); track c.id) {
-          <option [value]="c.id">{{ c.nome }} ({{ c.telefone }})</option>
+        <option [value]="c.id">{{ c.nome }} ({{ c.telefone }})</option>
         }
       </select>
     </div>

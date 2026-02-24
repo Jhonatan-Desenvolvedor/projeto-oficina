@@ -6,7 +6,7 @@
       <input type="number" [(ngModel)]="produtoAtual().precoProduto" placeholder="Preço (R$)">
       <input type="number" [(ngModel)]="produtoAtual().quantidadeEstoque" placeholder="Qtd em Estoque">
       <input [(ngModel)]="produtoAtual().descricao" placeholder="Descrição">
-      
+
       <div class="actions">
         <button class="btn-save" (click)="salvar()">{{ editando() ? 'Atualizar' : 'Cadastrar' }}</button>
         <button *ngIf="editando()" class="btn-cancel" (click)="resetar()">Cancelar</button>
@@ -27,15 +27,15 @@
       </thead>
       <tbody>
         @for (p of produtos(); track p.id) {
-          <tr>
-            <td>{{ p.nomeProduto }}</td>
-            <td>R$ {{ p.precoProduto.toFixed(2) }}</td>
-            <td>{{ p.quantidadeEstoque }} un</td>
-            <td>
-              <button class="btn-edit" (click)="prepararEdicao(p)">✎</button>
-              <button class="btn-delete" (click)="excluir(p.id)">🗑</button>
-            </td>
-          </tr>
+        <tr>
+          <td>{{ p.nomeProduto }}</td>
+          <td>R$ {{ p.precoProduto.toFixed(2) }}</td>
+          <td>{{ p.quantidadeEstoque }} un</td>
+          <td>
+            <button class="btn-edit" (click)="prepararEdicao(p)">✎</button>
+            <button class="btn-delete" (click)="excluir(p.id)">🗑</button>
+          </td>
+        </tr>
         }
       </tbody>
     </table>
