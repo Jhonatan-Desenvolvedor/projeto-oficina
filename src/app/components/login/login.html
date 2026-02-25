@@ -1,9 +1,33 @@
-<h2>Login</h2>
+<div class="login-container">
+  <div class="login-card">
+    <div class="login-header">
+      <i class="fas fa-user-circle logo-icon"></i>
+      <h2>Acessar Sistema</h2>
+      <p>Entre com suas credenciais</p>
+    </div>
 
-<input [(ngModel)]="username" placeholder="Usuário">
-<input [(ngModel)]="password" type="password" placeholder="Senha">
-<button (click)="login()">Entrar</button>
-<button class="btn-navegacao primary" routerLink="/register">
-        <i class="fas fa-file-invoice-dollar"></i>
-        <span>Cadastrar</span>
+    <div class="login-form">
+      <div class="input-group">
+        <label>Usuário</label>
+        <input [(ngModel)]="username" placeholder="Digite seu usuário">
+      </div>
+
+      <div class="input-group">
+        <label>Senha</label>
+        <input [(ngModel)]="password" type="password" placeholder="Digite sua senha">
+      </div>
+
+      <button class="btn-login" (click)="login()">
+        <span>Entrar</span>
+        <i class="fas fa-sign-in-alt"></i>
       </button>
+
+      <div class="divider"><span>ou</span></div>
+
+      <button class="btn-register" routerLink="/register">
+        <i class="fas fa-user-plus"></i>
+        <span>Criar nova conta</span>
+      </button>
+    </div>
+  </div>
+</div>
