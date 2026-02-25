@@ -1,73 +1,80 @@
-<!-- Botão de logout / limpar token -->
-<div class="header-actions">
-  <button class="btn-token-limpar" (click)="logout()">
-    <i class="fas fa-trash"></i> Limpar Token / Sair
-  </button>
-</div>
-
-<!-- Título do Dashboard -->
-<h1 class="dashboard-title">Dashboard - Controle de Oficina</h1>
-
-<!-- Área de navegação rápida -->
-<div class="navegacao-dashboard">
-  <h2>Acesso Rápido</h2>
-
-  <div class="botoes-grid">
-    <button class="btn-navegacao primary" routerLink="/cadastro-os">
-      <i class="fas fa-file-invoice-dollar"></i>
-      <span>Nova Ordem de Serviço</span>
-    </button>
-
-    <button class="btn-navegacao success" routerLink="/produtos">
-      <i class="fas fa-boxes-stacked"></i>
-      <span>Gerenciar Produtos</span>
-    </button>
-
-    <button class="btn-navegacao info" routerLink="/cadastro-veiculo">
-      <i class="fas fa-car-side"></i>
-      <span>Cadastrar / Editar Veículos</span>
-    </button>
-
-    <button class="btn-navegacao warning" routerLink="/cadastro-cliente">
-      <i class="fas fa-user-plus"></i>
-      <span>Cadastrar / Editar Clientes</span>
+<div class="container-xl py-4">
+  
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h1 class="dashboard-title h3 mb-0 fw-black text-dark">DASHBOARD</h1>
+    <button class="btn btn-danger rounded-pill px-4 shadow-sm" (click)="logout()">
+      <i class="fas fa-sign-out-alt me-2"></i>SAIR
     </button>
   </div>
-</div>
 
-<!-- Cards de informações -->
-<div class="dashboard-grid">
-  <div class="card faturamento">
-    <div class="icon">
-      <i class="fas fa-money-bill-wave"></i>
-    </div>
-    <div class="data">
-      <span>Total em OS Fechadas</span>
-      <h3>R$ {{ faturamentoTotal().toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) }}
-      </h3>
+  <div class="navegacao-dashboard mb-5">
+    <h5 class="text-muted small fw-bold mb-3 uppercase tracking-wider">ACESSO RÁPIDO</h5>
+    <div class="botoes-grid">
+      <button class="btn-navegacao primary" routerLink="/gerenciador-os">
+        <i class="fas fa-file-invoice-dollar"></i>
+        <span>Ordens de Serviço</span>
+      </button>
+
+      <button class="btn-navegacao success" routerLink="/produtos">
+        <i class="fas fa-boxes-stacked"></i>
+        <span>Estoque</span>
+      </button>
+
+      <button class="btn-navegacao info" routerLink="/gerenciador-veiculo">
+        <i class="fas fa-car-side"></i>
+        <span>Veículos</span>
+      </button>
+
+      <button class="btn-navegacao warning" routerLink="/gerenciador-cliente">
+        <i class="fas fa-user-plus"></i>
+        <span>Clientes</span>
+      </button>
     </div>
   </div>
 
-  <div class="card status-ok">
-    <div class="icon">
-      <i class="fas fa-check-circle"></i>
-    </div>
-    <div class="data">
-      <span>Metas do Mês</span>
-      <p>Operação Ativa</p>
-      <!-- Você pode adicionar mais informações aqui depois, ex: % de meta -->
-    </div>
-  </div>
+  <div class="row g-4">
+    
+    <div class="col-lg-4">
+      <div class="card border-0 shadow-sm p-4 rounded-4 bg-white h-100">
+        <h6 class="fw-bold mb-4 text-primary"><i class="fas fa-filter me-2"></i>FILTRAR PERÍODO</h6>
+        
+        <div class="mb-3">
+          <label class="label-custom">DATA INÍCIO</label>
+          <input type="date" class="form-control input-custom" 
+                 [ngModel]="dataInicio()" 
+                 (ngModelChange)="dataInicio.set($event); carregarDados()">
+        </div>
 
-  <!-- Você pode adicionar mais cards aqui no futuro -->
-  <!-- Exemplo: -->
-  <!-- 
-  <div class="card os-abertas">
-    <div class="icon"><i class="fas fa-tools"></i></div>
-    <div class="data">
-      <span>OS Abertas Hoje</span>
-      <h3>12</h3>
+        <div class="mb-4">
+          <label class="label-custom">DATA FIM</label>
+          <input type="date" class="form-control input-custom" 
+                 [ngModel]="dataFim()" 
+                 (ngModelChange)="dataFim.set($event); carregarDados()">
+        </div>
+
+        <button class="btn btn-light w-100 rounded-3 border fw-bold text-muted" (click)="limparFiltros()">
+          LIMPAR FILTROS
+        </button>
+      </div>
     </div>
+
+    <div class="col-lg-8">
+      <div class="card border-0 shadow-lg bg-primary-glass text-white h-100 rounded-4 overflow-hidden">
+        <div class="card-body p-5 d-flex flex-column justify-content-center align-items-center position-relative">
+          <i class="bi bi-cash-stack display-1 opacity-25 position-absolute end-0 bottom-0 m-4"></i>
+          
+          <div class="text-center z-1">
+            <h6 class="opacity-75 text-uppercase fw-bold ls-1">Faturamento (O.S. Fechadas)</h6>
+            <h1 class="display-3 fw-black my-3">
+              {{ faturamentoTotal() | currency:'BRL':'symbol':'1.2-2' }}
+            </h1>
+            <p class="small bg-white bg-opacity-25 rounded-pill px-3 py-1 d-inline-block">
+              Período: {{ dataInicio() || 'Início' }} até {{ dataFim() || 'Hoje' }}
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+
   </div>
-  -->
 </div>

@@ -1,3 +1,5 @@
+import { Cliente } from "./Cliente";
+
 export interface Veiculo {
   id?: number;
   marca: string;
@@ -5,4 +7,5 @@ export interface Veiculo {
   placa: string;
   cor: string;
   ano: number;
+  cliente?: Cliente;
 }

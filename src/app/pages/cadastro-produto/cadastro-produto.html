@@ -19,19 +19,19 @@
     <table>
       <thead>
         <tr>
-          <th>Nome</th>
-          <th>Preço</th>
-          <th>Estoque</th>
-          <th>Ações</th>
+          <th class="text-center">Nome</th>
+          <th class="text-center">Preço</th>
+          <th class="text-center">Estoque</th>
+          <th class="text-center">Ações</th>
         </tr>
       </thead>
       <tbody>
         @for (p of produtos(); track p.id) {
         <tr>
-          <td>{{ p.nomeProduto }}</td>
-          <td>R$ {{ p.precoProduto.toFixed(2) }}</td>
-          <td>{{ p.quantidadeEstoque }} un</td>
-          <td>
+          <td class="text-center">{{ p.nomeProduto }}</td>
+          <td class="text-center">R$ {{ p.precoProduto.toFixed(2) }}</td>
+          <td class="text-center">{{ p.quantidadeEstoque }} un</td>
+          <td class="text-center">
             <button class="btn-edit" (click)="prepararEdicao(p)">✎</button>
             <button class="btn-delete" (click)="excluir(p.id)">🗑</button>
           </td>

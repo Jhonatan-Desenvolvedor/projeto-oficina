@@ -31,7 +31,7 @@ export class LoginComponent {
       next: (res: any) => {
         if (res?.token) {
           this.authService.saveToken(res.token);
-          this.router.navigate(['/home']);
+          this.router.navigate(['/dashboard']);
         } else {
           alert('Resposta inválida do servidor');
         }

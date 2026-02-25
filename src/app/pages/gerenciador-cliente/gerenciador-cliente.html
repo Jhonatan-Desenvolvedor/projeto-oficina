@@ -1,0 +1,146 @@
+<div class="container-xl py-4">
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+      <h2 class="fw-black text-dark mb-0">GESTÃO DE CLIENTES</h2>
+      <p class="text-muted small">Visualize e gerencie os proprietários cadastrados</p>
+    </div>
+    <div>
+      <div class="d-flex gap-2">
+      <button class="btn btn-primary-glass shadow" routerLink="/cadastro-cliente">
+        <i class="bi bi-plus-circle-fill me-2"></i>NOVO CLIENTE
+      </button>
+
+      <button class="btn btn-light rounded-4 shadow-sm px-4 fw-bold border" routerLink="/dashboard">
+        <i class="bi bi-arrow-left me-2"></i>VOLTAR
+      </button>
+    </div>
+
+    </div>
+    </div>
+
+
+  <div class="row mb-4">
+    <div class="col-md-12">
+      <div class="input-group shadow-sm rounded-4">
+        <span class="input-group-text bg-white border-0 ps-3">
+          <i class="bi bi-search text-muted"></i>
+        </span>
+        <input type="text" class="form-control border-0 py-3" 
+               placeholder="Pesquisar por nome ou CPF..." 
+               [ngModel]="filtroNome()" (ngModelChange)="filtroNome.set($event)">
+      </div>
+    </div>
+  </div>
+
+  </div>
+
+<div class="container-xl py-4">
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h2 class="fw-black text-dark mb-0">CLIENTES & VEÍCULOS</h2>
+    <input type="text" class="form-control input-custom shadow-sm w-25" placeholder="Filtrar cliente..." [ngModel]="filtroNome()" (ngModelChange)="filtroNome.set($event)">
+  </div>
+
+  <div class="table-card shadow-lg bg-white">
+    <table class="table align-middle mb-0">
+      <thead class="bg-light">
+        <tr>
+          <th class="ps-4">NOME / ENDEREÇO</th>
+          <th>CONTATO</th>
+          <th>FROTA (QTD)</th>
+          <th class="text-center">AÇÕES</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (c of clientesFiltrados(); track c.id) {
+          <tr>
+            <td class="ps-4">
+              <div class="fw-bold">{{c.nome}}</div>
+              <div class="small text-muted">{{c.endereco}}</div>
+            </td>
+            <td><i class="bi bi-telephone me-2"></i>{{c.telefone}}</td>
+            <td>
+              <span class="badge rounded-pill bg-primary">
+                {{c.veiculos?.length || 0}} Veículos
+              </span>
+            </td>
+            <td class="text-center">
+              <button class="btn-action-edit me-2" (click)="prepararEdicao(c)">✎<i class="bi bi-pencil"></i></button>
+              <button class="btn-action-delete" (click)="excluirCliente(c.id!)">🗑<i class="bi bi-trash"></i></button>
+            </td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<div class="modal fade" id="modalCliente" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-xl modal-dialog-centered">
+    <div class="modal-content rounded-5 border-0 shadow-lg" *ngIf="clienteSelecionado() as c">
+      <div class="modal-header bg-dark text-white p-4">
+        <h5 class="modal-title fw-bold">GESTÃO DO CLIENTE #{{c.id}}</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+      </div>
+      
+      <div class="modal-body p-4">
+        <div class="row">
+          <div class="col-md-4 border-end">
+            <h6 class="fw-bold text-primary mb-3">INFORMAÇÕES PESSOAIS</h6>
+            <div class="mb-3">
+              <label class="label-custom">NOME</label>
+              <input type="text" class="form-control input-custom" [(ngModel)]="c.nome">
+            </div>
+            <div class="mb-3">
+              <label class="label-custom">ENDEREÇO</label>
+              <input type="text" class="form-control input-custom" [(ngModel)]="c.endereco">
+            </div>
+            <div class="mb-3">
+              <label class="label-custom">TELEFONE</label>
+              <input type="text" class="form-control input-custom" [(ngModel)]="c.telefone">
+            </div>
+          </div>
+
+          <div class="col-md-8 ps-md-4">
+            <h6 class="fw-bold text-primary mb-3">VEÍCULOS VINCULADOS</h6>
+            
+            <div class="row g-2 mb-4 p-3 bg-light rounded-4 border">
+              <div class="col-md-3"><input type="text" class="form-control form-control-sm" placeholder="Marca" [(ngModel)]="novoVeiculo.marca"></div>
+              <div class="col-md-3"><input type="text" class="form-control form-control-sm" placeholder="Modelo" [(ngModel)]="novoVeiculo.modelo"></div>
+              <div class="col-md-2"><input type="text" class="form-control form-control-sm" placeholder="Placa" [(ngModel)]="novoVeiculo.placa"></div>
+              <div class="col-md-2"><input type="number" class="form-control form-control-sm" placeholder="Ano" [(ngModel)]="novoVeiculo.ano"></div>
+              <div class="col-md-2"><button class="btn btn-primary btn-sm w-100" (click)="adicionarVeiculo()">ADD</button></div>
+            </div>
+
+            <div class="table-responsive" style="max-height: 250px;">
+              <table class="table table-sm align-middle">
+                <thead>
+                  <tr class="small text-muted">
+                    <th>MARCA</th>
+                    <th>MODELO</th>
+                    <th>PLACA</th>                    
+                    <th>ANO</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  @for (v of c.veiculos; track $index) {
+                    <tr>
+                      <td>{{v.marca}} </td>
+                      <td>{{v.modelo}}</td>
+                      <td>{{v.placa}}</td>                      
+                      <td>{{v.ano}}</td>                      
+                    </tr>
+                  }
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="modal-footer border-0 p-4 bg-light">
+        <button class="btn btn-secondary rounded-pill px-4" data-bs-dismiss="modal">CANCELAR</button>
+        <button class="btn btn-primary-glass px-5" (click)="salvarEdicao()" data-bs-dismiss="modal">SALVAR TUDO</button>
+      </div>
+    </div>
+  </div>
+</div>

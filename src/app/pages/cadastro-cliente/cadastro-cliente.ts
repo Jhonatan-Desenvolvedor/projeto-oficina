@@ -29,12 +29,12 @@ export class ClienteFormComponent {
 
   addVeiculo() {
     const v = this.veiculoTemp();
-    if (v.marca && v.placa) {
+    if (v.marca && v.placa && v.modelo && v.ano && v.cor) { // Verifica campos essenciais
       this.listaVeiculos.update(list => [...list, { ...v }]);
       // Limpa campos do veículo
       this.veiculoTemp.set({ marca: '', modelo: '', placa: '', cor: '', ano: 2024 });
     } else {
-      alert('Preencha ao menos Marca e Placa do veículo!');
+      alert('Preencha ao menos Marca, Modelo, Placa, Cor e Ano do veículo!');
     }
   }
 

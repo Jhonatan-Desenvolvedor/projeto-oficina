@@ -1,94 +1,204 @@
-<div class="container">
-  <h2>Ordens de Serviço</h2>
+<div class="container-xl py-4">
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h2 class="fw-black text-dark mb-0 ls-tight">GERENCIAMENTO DE O.S.</h2>
+    
+    <div class="d-flex gap-2">
+      <button class="btn btn-primary-glass shadow" routerLink="/cadastro-os">
+        <i class="bi bi-plus-circle-fill me-2"></i>NOVA ORDEM
+      </button>
 
-  <div class="acoes">
-    <button (click)="carregarOrdens()" class="btn-atualizar">Atualizar Lista</button>
+      <button class="btn btn-light rounded-4 shadow-sm px-4 fw-bold border" routerLink="/dashboard">
+        <i class="bi bi-arrow-left me-2"></i>VOLTAR
+      </button>
+    </div>
+  </div>
+  
+
+
+
+  <div class="card border-0 shadow-sm p-4 mb-4 bg-white rounded-4">
+    <div class="row g-3 align-items-end">
+      <div class="col-md-3">
+        <label class="label-custom">CLIENTE OU PLACA</label>
+        <input type="text" class="form-control input-custom" [ngModel]="filtroNome()"
+          (ngModelChange)="filtroNome.set($event)" placeholder="Pesquisar...">
+      </div>
+      <div class="col-md-4">
+        <label class="label-custom">PERÍODO (INÍCIO - FIM)</label>
+        <div class="input-group">
+          <input type="date" class="form-control input-custom" [ngModel]="dataInicio()"
+            (ngModelChange)="dataInicio.set($event)">
+          <input type="date" class="form-control input-custom" [ngModel]="dataFim()"
+            (ngModelChange)="dataFim.set($event)">
+        </div>
+      </div>
+      <div class="col-md-3">
+        <label class="label-custom">STATUS</label>
+        <select class="form-select input-custom" [ngModel]="filtroStatus()" (ngModelChange)="filtroStatus.set($event)">
+          <option value="todos">Todos</option>
+          <option value="ABERTO">ABERTO</option>
+          <option value="FECHADO">FECHADO</option>
+        </select>
+      </div>
+      <div class="col-md-2">
+        <button class="btn btn-light w-100 rounded-pill border fw-bold text-muted py-2" (click)="limparFiltros()">
+          LIMPAR
+        </button>
+      </div>
+    </div>
   </div>
 
-  <!-- Carregando -->
-  <div *ngIf="carregando()" class="loading">
-    Carregando ordens de serviço...
+  <div class="table-card shadow-lg bg-white">
+    <table class="table align-middle mb-0">
+      <thead>
+        <tr>
+          <th class="ps-4 py-3">ID</th>
+          <th class="py-3">CLIENTE / VEÍCULO</th>
+          <th class="py-3">DATA</th>
+          <th class="py-3">VALOR TOTAL</th>
+          <th class="py-3 text-center">STATUS</th>
+          <th class="py-3 text-center">AÇÕES</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (os of ordensFiltradas(); track os.id) {
+        <tr>
+          <td class="ps-4 fw-bold text-primary">#{{os.id}}</td>
+          <td>
+            <div class="fw-bold">{{os.cliente.nome}}</div>
+            <div class="small text-muted">{{os.veiculo.modelo}} ({{os.veiculo.placa}})</div>
+          </td>
+          <td class="small">{{os.data | date:'dd/MM/yyyy'}}</td>
+          <td class="fw-bold">{{os.valorTotal | currency:'BRL'}}</td>
+          <td class="text-center">
+            <span class="badge-status" [ngClass]="String(os.status) === 'ABERTO' ? 'status-aberto' : 'status-fechado'">
+              {{os.status}}
+            </span>
+          </td>
+          <td class="text-center">
+            <button class="btn-action-edit" (click)="prepararEdicao(os)">
+              ✎
+              <i class="bi bi-pencil-fill"></i>
+            </button>
+          </td>
+        </tr>
+        }
+      </tbody>
+    </table>
   </div>
-
-  <!-- Erro -->
-  <div *ngIf="erro()" class="erro">
-    {{ erro() }}
-  </div>
-
-  <!-- Tabela -->
-  <table *ngIf="!carregando() && !erro() && ordens().length > 0" class="tabela-os">
-    <thead>
-      <tr>
-        <th>ID</th>
-        <th>Cliente</th>
-        <th>Veículo</th>
-        <th>Valor Total</th>
-        <th>Status</th>
-        <th>Ações</th>
-      </tr>
-    </thead>
-    <tbody>
-      @for (os of ordens(); track os.id) {
-      <tr>
-        <td>{{ os.id }}</td>
-        <td>{{ os.cliente?.nome}}</td>
-        <td>{{ os.veiculo?.placa}} {{ os.veiculo?.modelo ? '(' + os.veiculo.modelo + ')' : '' }}</td>
-        <td>R$ {{ os.valorTotal?.toFixed(2) || '0.00' }}</td>
-        <td>
-          <span class="status-badge" [ngClass]="(os.status + '').toLowerCase()"> {{ os.status || 'N/D' }}
-          </span>
-        </td>
-        <td>
-          <button class="btn-editar" (click)="editarOs(os)">Editar</button>
-          <button class="btn-excluir" (click)="excluirOs(os)">Excluir</button>
-        </td>
-      </tr>
-      }
-    </tbody>
-  </table>
-
-  <!-- Sem registros -->
-  <p *ngIf="!carregando() && !erro() && ordens().length === 0" class="sem-registros">
-    Nenhuma ordem de serviço encontrada.
-  </p>
 </div>
 
-<div class="modal-overlay" *ngIf="osSelecionada()">
-  <div class="modal-content">
-    <h3>Editar Ordem de Serviço #{{ osSelecionada()?.id }}</h3>
-
-    <form (submit)="salvarEdicao($event)">
-      <div class="grid-form">
-        <div class="campo">
-          <label>Cliente:</label>
-          <input type="text" [value]="osSelecionada()?.cliente?.nome" disabled>
-        </div>
-
-        <div class="campo">
-          <label>Veículo (Placa):</label>
-          <input type="text" [value]="osSelecionada()?.veiculo?.placa" disabled>
-        </div>
-
-        <div class="campo">
-          <label>Status:</label>
-          <select [(ngModel)]="osSelecionada()!.status" name="status">
-            <option value="ABERTO">ABERTO</option>
-            <option value="FECHADO">FECHADO</option>
-          </select>
-        </div>
-
-        <div class="campo">
-          <label>Valor Total (R$):</label>
-          <input type="number" step="0.01" [(ngModel)]="osSelecionada()!.valorTotal" name="valorTotal">
-        </div>
+<div class="modal fade" id="modalEditar" tabindex="-1" aria-hidden="true" data-bs-backdrop="static">
+  <div class="modal-dialog modal-xl modal-dialog-centered">
+    <div class="modal-content rounded-5 shadow-lg border-0 overflow-hidden" *ngIf="osSelecionada() as os">
+      <div class="modal-header bg-dark text-white p-4">
+        <h5 class="modal-title fw-bold">EDITAR O.S. #{{os.id}}</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
       </div>
 
+      <div class="modal-body p-4">
+        <div class="row g-3 mb-4 p-3 rounded-4 bg-light border">
+          <div class="col-md-6 border-end">
+            <h6 class="text-primary fw-bold mb-3 small">DADOS DO CLIENTE</h6>
+            <div class="row">
+              <div class="col-6">
+                <p class="mb-0 small text-muted">NOME</p>
+                <p class="fw-bold mb-0">{{os.cliente.nome}}</p>
+              </div>
+              <div class="col-6">
+                <p class="mb-0 small text-muted">TELEFONE</p>
+                <p class="fw-bold mb-0">{{os.cliente.telefone}}</p>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-6 ps-md-4">
+            <h6 class="text-primary fw-bold mb-3 small">DADOS DO VEÍCULO</h6>
+            <div class="row">
+              <div class="col-3">
+                <p class="mb-0 small text-muted">MARCA</p>
+                <p class="fw-bold mb-0">{{os.veiculo.marca}}</p>
+              </div>
 
+              <div class="col-3">
+                <p class="mb-0 small text-muted">MODELO</p>
+                <p class="fw-bold mb-0">{{os.veiculo.modelo}}</p>
+              </div>
+              <div class="col-3">
+                <p class="mb-0 small text-muted">ANO</p>
+                <p class="fw-bold mb-0">{{os.veiculo.ano}}</p>
+              </div>
+              <div class="col-3">
+                <p class="mb-0 small text-muted">PLACA</p>
+                <p class="fw-bold mb-0">{{os.veiculo.placa}}</p>
+              </div>
+            </div>
+          </div>
+        </div>
 
-      <div class="modal-acoes">
-        <button type="button" (click)="fecharModal()" class="btn-cancelar">Cancelar</button>
-        <button type="submit" class="btn-salvar">Salvar Alterações</button>
+        <div class="row g-4">
+          <div class="col-md-3">
+            <div class="p-3 rounded-4 bg-white border h-100 shadow-sm">
+              <label class="label-custom">VALOR TOTAL</label>
+              <h3 class="fw-900 text-primary mb-4">{{os.valorTotal | currency:'BRL'}}</h3>
+              <label class="label-custom">STATUS</label>
+              <select class="form-select input-custom" [ngModel]="os.status"
+                (ngModelChange)="osSelecionada.set({...os, status: $event})">
+                <option value="ABERTO">ABERTO</option>
+                <option value="FECHADO">FECHADO</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="col-md-9">
+            <div class="row g-3">
+              <div class="col-md-6">
+                <h6 class="fw-bold text-success small">SERVIÇOS</h6>
+                <div class="input-group mb-2">
+                  <input type="text" class="form-control input-custom" placeholder="Desc." [ngModel]="novoServico()"
+                    (ngModelChange)="novoServico.set($event)">
+                  <input type="number" class="form-control input-custom w-25" placeholder="R$"
+                    [ngModel]="valorNovoServico()" (ngModelChange)="valorNovoServico.set($event)">
+                  <button class="btn btn-success" (click)="adicionarServico()">+</button>
+                </div>
+                <div class="list-group list-group-flush border rounded-3 overflow-auto" style="max-height: 150px;">
+                  @for (s of os.servicos; track $index) {
+                  <div class="list-group-item d-flex justify-content-between align-items-center py-1 small">
+                    {{s}} <i class="bi bi-trash text-danger pointer" (click)="removerItem('servicos', $index)"></i>
+                  </div>
+                  }
+                </div>
+              </div>
+              <div class="col-md-6">
+                <h6 class="fw-bold text-warning small">PEÇAS</h6>
+                <div class="input-group mb-2">
+                  <input type="text" class="form-control input-custom" placeholder="Peça" [ngModel]="novoProduto()"
+                    (ngModelChange)="novoProduto.set($event)">
+                  <input type="number" class="form-control input-custom w-25" placeholder="R$"
+                    [ngModel]="valorNovoProduto()" (ngModelChange)="valorNovoProduto.set($event)">
+                  <button class="btn btn-warning text-white" (click)="adicionarProduto()">+</button>
+                </div>
+                <div class="list-group list-group-flush border rounded-3 overflow-auto" style="max-height: 150px;">
+                  @for (p of os.produtos; track $index) {
+                  <div class="list-group-item d-flex justify-content-between align-items-center py-1 small">
+                    {{p}} <i class="bi bi-trash text-danger pointer" (click)="removerItem('produtos', $index)"></i>
+                  </div>
+                  }
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
-    </form>
+      <div class="modal-footer p-4 bg-light">
+        <button type="button" class="btn btn-secondary rounded-pill px-4" data-bs-dismiss="modal">
+          CANCELAR
+        </button>
+
+        <button type="button" class="btn btn-primary-glass px-5" (click)="confirmarUpdate()"
+          [disabled]="String(osSelecionada()?.status) === 'FECHADO'" data-bs-dismiss="modal">
+          {{ String(osSelecionada()?.status) === 'FECHADO' ? 'O.S. ENCERRADA' : 'SALVAR ATUALIZAÇÕES' }}
+        </button>
+      </div>
+    </div>
   </div>
 </div>

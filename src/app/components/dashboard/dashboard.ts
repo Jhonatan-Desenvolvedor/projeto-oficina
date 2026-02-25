@@ -1,30 +1,39 @@
 import { CommonModule } from '@angular/common';
-import { Component, signal, inject } from '@angular/core';
+import { Component, signal, inject, OnInit } from '@angular/core';
 import { DataService } from '../../services/data.service';
 import { RouterModule } from '@angular/router';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-dashboard',
-  imports: [CommonModule, RouterModule],
   standalone: true,
+  imports: [CommonModule, RouterModule, FormsModule],
   templateUrl: './dashboard.html',
   styleUrl: './dashboard.css',
 })
-export class Dashboard {
+export class Dashboard implements OnInit {
   private dataService = inject(DataService);
 
-  // Signals para os dados
   faturamentoTotal = signal<number>(0);
-  quantidadeOsFechadas = signal<number>(0);
+  dataInicio = signal<string>('');
+  dataFim = signal<string>('');
 
-  constructor() {
+  ngOnInit() {
     this.carregarDados();
   }
 
   carregarDados() {
-    this.dataService.getFaturamentoTotal().subscribe(valor => {
-      this.faturamentoTotal.set(valor);
+    // Note que passamos os valores dos signals para o service
+    this.dataService.getFaturamentoTotal(this.dataInicio(), this.dataFim()).subscribe({
+      next: (valor) => this.faturamentoTotal.set(valor),
+      error: (err) => console.error('Erro ao buscar faturamento:', err)
     });
+  }
+
+  limparFiltros() {
+    this.dataInicio.set('');
+    this.dataFim.set('');
+    this.carregarDados();
   }
 
   logout() {

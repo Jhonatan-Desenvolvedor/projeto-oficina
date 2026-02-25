@@ -1,105 +1,154 @@
-// src/app/pages/lista-os/lista-os.component.ts
-import { Component, signal, inject } from '@angular/core';
+import { Component, OnInit, signal, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { DataService } from '../../services/data.service';
-import { OrdemServico } from '../../models/Os';
 import { FormsModule } from '@angular/forms';
+import { RouterModule } from '@angular/router';
+import { DataService } from '../../services/data.service'; 
+import { OrdemServico } from '../../models/Os';
+
+// Declaração para o TypeScript não reclamar do Bootstrap global
+declare var bootstrap: any;
 
 @Component({
-  selector: 'app-lista-os',
+  selector: 'app-gerenciador-os',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, RouterModule],
   templateUrl: './gerenciador-os.html',
   styleUrls: ['./gerenciador-os.css']
 })
-export class ListaOsComponent {
-  private dataService = inject(DataService);
+export class GerenciadorOsComponent implements OnInit {
+  protected readonly String = String;
 
   ordens = signal<OrdemServico[]>([]);
-  carregando = signal<boolean>(true);
-  erro = signal<string | null>(null);
+  carregando = signal(false);
+  osSelecionada = signal<OrdemServico | null>(null);
 
-  constructor() {
-    this.carregarOrdens();
-  }
+  // Filtros
+  filtroNome = signal('');
+  filtroStatus = signal('todos');
+  dataInicio = signal('');
+  dataFim = signal('');
+
+  // Itens Temporários para o Modal
+  novoServico = signal('');
+  valorNovoServico = signal<number | null>(null);
+  novoProduto = signal('');
+  valorNovoProduto = signal<number | null>(null);
+
+  ordensFiltradas = computed(() => {
+  const lista = this.ordens().filter(os => {
+    const busca = this.filtroNome().toLowerCase();
+    const nomeMatch = !busca || 
+      (os.cliente?.nome || '').toLowerCase().includes(busca) ||
+      (os.veiculo?.placa || '').toLowerCase().includes(busca);
+
+    const statusMatch = this.filtroStatus() === 'todos' || String(os.status) === this.filtroStatus();
+
+    const dataOs = os.data ? new Date(os.data).toISOString().split('T')[0] : '';
+    const inicio = this.dataInicio();
+    const fim = this.dataFim();
+
+    let dataMatch = true;
+    if (inicio && fim) dataMatch = dataOs >= inicio && dataOs <= fim;
+    else if (inicio) dataMatch = dataOs >= inicio;
+    else if (fim) dataMatch = dataOs <= fim;
+
+    return nomeMatch && statusMatch && dataMatch;
+  });
+
+  // ADICIONE ESTA LINHA: Ordenação decrescente por ID
+  return lista.sort((a, b) => (b.id || 0) - (a.id || 0));
+});
+
+  constructor(private dataService: DataService) { }
+
+  ngOnInit() { this.carregarOrdens(); }
 
   carregarOrdens() {
     this.carregando.set(true);
-    this.erro.set(null);
-
     this.dataService.getOrdensServico().subscribe({
-      next: (res) => {
-        this.ordens.set(res);
-        this.carregando.set(false);
-      },
-      error: (err) => {
-        console.error('Erro ao listar OS:', err);
-        this.erro.set('Não foi possível carregar as ordens de serviço.');
-        this.carregando.set(false);
-      }
+      next: (dados) => { this.ordens.set(dados); this.carregando.set(false); },
+      error: () => this.carregando.set(false)
     });
   }
 
-
-  excluirOs(os: OrdemServico) {
-    if (!os.id) return;
-
-    const mensagem = `Tem certeza que deseja EXCLUIR a OS #${os.id}?\n` +
-      `Cliente: ${os.cliente?.nome || 'Não informado'}\n` +
-      `Valor: R$ ${os.valorTotal?.toFixed(2) || '0.00'}\n` +
-      `Status: ${os.status || 'N/D'}`;
-
-    if (!confirm(mensagem)) return;
-
-    this.dataService.deleteOrdemServico(os.id).subscribe({
-      next: () => {
-        this.ordens.update(lista => lista.filter(item => item.id !== os.id));
-        alert('Ordem de Serviço excluída com sucesso!');
-      },
-      error: (err) => {
-        console.error('Erro ao excluir OS:', err);
-        alert('Não foi possível excluir esta OS.');
-      }
-    });
+  limparFiltros() {
+    this.filtroNome.set('');
+    this.filtroStatus.set('todos');
+    this.dataInicio.set('');
+    this.dataFim.set('');
   }
 
-  editarOs(os: OrdemServico) {
-    // Por enquanto só um alert
-    // Depois você pode navegar para uma página de edição: this.router.navigate(['/editar-os', os.id]);
-    alert(
-      `Editar OS #${os.id}\n` +
-      `Cliente: ${os.cliente?.nome || 'N/D'}\n` +
-      `Veículo: ${os.veiculo?.placa || 'N/D'}\n` +
-      `Valor total: R$ ${os.valorTotal?.toFixed(2) || '0.00'}\n` +
-      `Status: ${os.status || 'N/D'}`
-    );
+  prepararEdicao(os: OrdemServico) {
+    // 1. Criar uma cópia profunda para evitar alteração direta na tabela antes de salvar
+    this.osSelecionada.set(JSON.parse(JSON.stringify(os)));
+
+    // 2. Abrir o modal via JavaScript
+    const modalElem = document.getElementById('modalEditar');
+    if (modalElem) {
+      const modal = new bootstrap.Modal(modalElem);
+      modal.show();
+    } else {
+      console.error("Elemento modalEditar não encontrado no DOM");
+    }
   }
 
-  // No topo, adicione o signal
-  osSelecionada = signal<OrdemServico | null>(null);
-
-  // Método para abrir o modal
-  updateOrdemServico(os: OrdemServico) {
-    // Criamos uma cópia para não alterar a tabela antes de salvar no banco
-    this.osSelecionada.set({ ...os });
+  adicionarServico() {
+    const nome = this.novoServico().trim();
+    const valor = this.valorNovoServico();
+    const os = this.osSelecionada();
+    if (nome && valor !== null && os) {
+      const item = `${nome} - R$ ${valor.toFixed(2)}`;
+      const lista = os.servicos ? [...os.servicos, item] : [item];
+      this.osSelecionada.set({ ...os, servicos: lista, valorTotal: (os.valorTotal || 0) + valor });
+      this.novoServico.set('');
+      this.valorNovoServico.set(null);
+    }
   }
 
-  fecharModal() {
-    this.osSelecionada.set(null);
+  adicionarProduto() {
+    const nome = this.novoProduto().trim();
+    const valor = this.valorNovoProduto();
+    const os = this.osSelecionada();
+    if (nome && valor !== null && os) {
+      const item = `${nome} - R$ ${valor.toFixed(2)}`;
+      const lista = os.produtos ? [...os.produtos, item] : [item];
+      this.osSelecionada.set({ ...os, produtos: lista, valorTotal: (os.valorTotal || 0) + valor });
+      this.novoProduto.set('');
+      this.valorNovoProduto.set(null);
+    }
   }
 
-  salvarEdicao(event: Event) {
-    event.preventDefault();
-    const osParaSalvar = this.osSelecionada();
+  removerItem(lista: 'servicos' | 'produtos', index: number) {
+    const os = this.osSelecionada();
+    if (os && os[lista]) {
+      const itemString = os[lista]![index];
+      const valorStr = itemString.split('R$ ')[1];
+      const valorExtraido = parseFloat(valorStr) || 0;
+      
+      const novaLista = [...os[lista]!];
+      novaLista.splice(index, 1);
+      
+      this.osSelecionada.set({ 
+        ...os, 
+        [lista]: novaLista, 
+        valorTotal: Math.max(0, (os.valorTotal || 0) - valorExtraido) 
+      });
+    }
+  }
 
-    if (osParaSalvar) {
-      this.dataService.saveOrdemServico(osParaSalvar).subscribe({
-        next: () => {
-          alert('OS atualizada com sucesso!');
-          this.fecharModal();
-          this.carregarOrdens(); // Atualiza a lista
+  confirmarUpdate() {
+    const os = this.osSelecionada();
+    if (os && os.id) {
+      this.dataService.updateOrdemServico(os.id, os).subscribe({
+        next: () => { 
+          this.carregarOrdens(); 
+          this.osSelecionada.set(null);
+          alert("Ordem de serviço atualizada com sucesso!");
         },
-        error: (err) => console.error('Erro ao atualizar:', err)
+        error: (err) => {
+          console.error(err);
+          alert("Erro ao salvar no servidor (500). Verifique o terminal Java.");
+        }
       });
     }
   }

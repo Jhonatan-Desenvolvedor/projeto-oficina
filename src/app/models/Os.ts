@@ -10,5 +10,5 @@ export interface OrdemServico {
   produtos: string[];
   valorTotal: number;
   status: StatusOs;
-  dataAbertura?: string;
+  data?: string;
 }
