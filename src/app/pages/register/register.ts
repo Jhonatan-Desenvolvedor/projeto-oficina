@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { Router } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
@@ -7,7 +7,7 @@ import { HttpClient } from '@angular/common/http';
 @Component({
   selector: 'app-register',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, RouterModule],
   templateUrl: './register.html'
 })
 export class RegisterComponent {
@@ -17,7 +17,10 @@ export class RegisterComponent {
   confirmPassword = '';
 
 
+
   constructor(private http: HttpClient, private router: Router) { }
+
+
 
   register() {
     if (this.password !== this.confirmPassword) {

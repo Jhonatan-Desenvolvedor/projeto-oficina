@@ -1,13 +1,55 @@
-<div class="register-card">
-  <h2>Registrar Conta</h2>
+<div class="container py-5">
+  <div class="row justify-content-center align-items-center min-vh-100">
+    <div class="col-md-6 col-lg-5">
+      <div class="card register-card shadow border-0" style="border-radius: 15px;">
+        
+        <div class="register-header text-center p-4">
+          <i class="bi bi-person-plus-fill text-primary" style="font-size: 3.5rem;"></i>
+          <h2 class="fw-bold">Criar Conta</h2>
+          <p class="text-muted">Rápido, simples e gratuito.</p>
+        </div>
+        
+        <div class="register-body p-4 pt-0">
+          <form (ngSubmit)="register()">
+            
+            <div class="form-floating mb-3">
+              <input type="text" class="form-control" id="username" name="username" 
+                     [(ngModel)]="username" placeholder="Usuário" required>
+              <label for="username">Escolha um usuário</label>
+              <i class="bi bi-person position-absolute top-50 end-0 translate-middle-y me-3 text-muted"></i>
+            </div>
 
-  <form (ngSubmit)="register()">
-    <input [(ngModel)]="username" name="username" placeholder="Usuário" required>
-    <input [(ngModel)]="password" name="password" placeholder="Senha" type="password" required>
-    <input [(ngModel)]="confirmPassword" name="confirmPassword" placeholder="Confirme a Senha" type="password" required>
+            <div class="form-floating mb-3">
+              <input type="password" class="form-control" id="password" name="password" 
+                     [(ngModel)]="password" placeholder="Senha" required>
+              <label for="password">Senha</label>
+              <i class="bi bi-lock position-absolute top-50 end-0 translate-middle-y me-3 text-muted"></i>
+            </div>
 
-    <button type="submit" [disabled]="!username || password !== confirmPassword">
-      CRIAR CONTA
-    </button>
-  </form>
+            <div class="form-floating mb-4">
+              <input type="password" class="form-control" id="confirmPassword" name="confirmPassword" 
+                     [(ngModel)]="confirmPassword" placeholder="Confirmar Senha" required>
+              <label for="confirmPassword">Confirme a senha</label>
+              <i class="bi bi-shield-check position-absolute top-50 end-0 translate-middle-y me-3 text-muted"></i>
+            </div>
+
+            <button type="submit" class="btn btn-primary w-100 py-3 fw-bold shadow-sm" style="border-radius: 10px;">
+              <i class="bi bi-check-circle me-2"></i> Finalizar Cadastro
+            </button>
+          </form>
+
+          <div class="text-center mt-4">
+            <p class="mb-0 text-muted">
+              Já tem uma conta? 
+              <a routerLink="/login" class="fw-bold text-primary text-decoration-none">Fazer login</a>
+            </p>
+          </div>
+        </div>
+      </div>
+      
+      <div class="text-center mt-3 text-muted">
+        <small>&copy; 2026 Sua Oficina JBT</small>
+      </div>
+    </div>
+  </div>
 </div>

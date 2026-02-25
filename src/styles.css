@@ -1,1 +1,15 @@
-/* You can add global styles to this file, and also import other style files */
+/* Aplicando a fonte em todo o projeto */
+body {
+  font-family: 'Inter', sans-serif;
+  background-color: #f8f9fa; /* Um cinza bem clarinho padrão de sistemas modernos */
+  margin: 0;
+  padding: 0;
+}
+
+/* Criando uma classe de centralização que você pode usar no app.component.html */
+.main-container {
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}

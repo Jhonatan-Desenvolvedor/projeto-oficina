@@ -1,27 +1,24 @@
 <div class="os-container">
-  <h2><i class="fas fa-file-invoice"></i> Gerar Ordem de Serviço</h2>
+  <div class="header-os">
+    <h2><i class="bi bi-file-earmark-medical-fill"></i> Gerar Ordem de Serviço</h2>
+    <p class="text-muted">Preencha os dados abaixo para registrar a manutenção.</p>
+  </div>
 
   <div class="section-group">
     <div class="section">
-      <label>Cliente:</label>
-      <select [(ngModel)]="clienteId" (ngModelChange)="onClienteChange()" name="cliente">
+      <label><i class="bi bi-person-fill"></i> Cliente</label>
+      <select [(ngModel)]="clienteId" (ngModelChange)="onClienteChange()">
         <option [ngValue]="null">Selecione o Cliente</option>
-        @for (c of clientes(); track c.id) {
-        <option [value]="c.id">{{ c.nome }}</option>
-        }
+        @for (c of clientes(); track c.id) { <option [value]="c.id">{{ c.nome }}</option> }
       </select>
     </div>
 
     <div class="section">
-      <label>Veículo:</label>
-      <select [(ngModel)]="veiculoId" name="veiculo" [disabled]="!clienteId() || veiculosFiltrados().length === 0">
-        <option [ngValue]="null">
-          @if (!clienteId()) { Selecione um cliente primeiro }
-          @else if (veiculosFiltrados().length === 0) { Nenhum veículo encontrado }
-          @else { Selecione o Veículo }
-        </option>
-        @for (v of veiculosFiltrados(); track v.id) {
-        <option [value]="v.id">{{ v.marca }} {{ v.modelo }} - {{ v.placa }}</option>
+      <label><i class="bi bi-car-front-fill"></i> Veículo</label>
+      <select [(ngModel)]="veiculoId" [disabled]="!clienteId()">
+        <option [ngValue]="null">Selecione o Veículo</option>
+        @for (v of veiculosFiltrados(); track v.id) { 
+          <option [value]="v.id">{{ v.marca }} {{ v.modelo }} ({{ v.placa }})</option> 
         }
       </select>
     </div>
@@ -29,72 +26,77 @@
 
   <div class="grid">
     <div class="box">
-      <h3><i class="fas fa-box"></i> Adicionar Produtos</h3>
+      <h3><i class="bi bi-search"></i> Peças no Estoque</h3>
       <div class="input-row">
         <select #pSel>
-          <option value="" disabled selected>Escolha um produto...</option>
+          <option value="">Buscar peça...</option>
           @for (p of produtosDB(); track p.id) {
-          <option [value]="p.id" [attr.data-preco]="p.precoProduto" [attr.data-nome]="p.nomeProduto">
-            {{ p.nomeProduto }} - R$ {{ p.precoProduto }}
-          </option>
+            <option [value]="p.id" [attr.data-preco]="p.precoProduto" [attr.data-nome]="p.nomeProduto">
+              {{ p.nomeProduto }} (R$ {{ p.precoProduto }})
+            </option>
           }
         </select>
-        <button type="button" class="btn-add" (click)="adicionarProduto(pSel)">
-          <i class="fas fa-plus"></i>
-        </button>
+        <button class="btn-icon-add" (click)="adicionarProduto(pSel)"><i class="bi bi-plus-lg"></i></button>
       </div>
     </div>
 
     <div class="box">
-      <h3><i class="fas fa-wrench"></i> Adicionar Serviço Manual</h3>
-      <div class="manual-service-form">
-        <input type="text" #descServ placeholder="Descrição do serviço (ex: Troca de Freio)" class="input-text-field">
-
+      <h3><i class="bi bi-box-seam-fill"></i> Peça Manual</h3>
+      <div class="manual-form">
+        <input type="text" #pD placeholder="Nome da peça" class="form-control mb-2">
         <div class="input-row">
-          <input type="number" #valorServ placeholder="Preço R$" class="input-price-field">
+          <input type="number" #pV placeholder="R$" class="form-control">
+          <button class="btn-add btn-peca" (click)="adicionarProdutoManual(pD, pV)">
+            <i class="bi bi-plus-circle-fill"></i> ADICIONAR
+          </button>
+        </div>
+      </div>
+    </div>
 
-          <button type="button" class="btn-add" (click)="adicionarServicoManual(descServ, valorServ)">
-            <i class="fas fa-plus"></i>
+    <div class="box">
+      <h3><i class="bi bi-tools"></i> Novo Serviço</h3>
+      <div class="manual-form">
+        <input type="text" #sD placeholder="Descrição do serviço" class="form-control mb-2">
+        <div class="input-row">
+          <input type="number" #sV placeholder="R$" class="form-control">
+          <button class="btn-add btn-servico" (click)="adicionarServicoManual(sD, sV)">
+            <i class="bi bi-plus-circle-fill"></i> ADICIONAR
           </button>
         </div>
       </div>
     </div>
   </div>
 
-  <div class="resumo">
-    <h4><i class="fas fa-list-ul"></i> Itens Adicionados:</h4>
-
+  <div class="resumo-card">
+    <h4 class="mb-4">Itens Selecionados</h4>
     <div class="lista-itens">
-      <ul>
-        @for (prod of produtosSelecionados(); track $index) {
-        <li class="item-linha">
-          <span><span class="tag p">P</span> {{ prod.nome }}</span>
-          <span class="preco">R$ {{ prod.preco.toFixed(2) }}</span>
-        </li>
-        }
-
-        @for (serv of servicosSelecionados(); track $index) {
-        <li class="item-linha">
-          <span><span class="tag s">S</span> {{ serv.nome }}</span>
-          <span class="preco">R$ {{ serv.preco.toFixed(2) }}</span>
-        </li>
-        }
-
-        @if (produtosSelecionados().length === 0 && servicosSelecionados().length === 0) {
-        <li class="vazio">Nenhum item adicionado à lista.</li>
-        }
-      </ul>
+      @for (item of produtosSelecionados(); track $index) {
+        <div class="item-row">
+          <span><span class="badge-type p">PEÇA</span> {{ item.nome }}</span>
+          <div class="d-flex align-items-center">
+            <span class="fw-bold me-3">R$ {{ item.preco.toFixed(2) }}</span>
+            <button class="btn-del" (click)="removerItem('p', $index)"><i class="bi bi-trash3"></i></button>
+          </div>
+        </div>
+      }
+      @for (item of servicosSelecionados(); track $index) {
+        <div class="item-row">
+          <span><span class="badge-type s">SERV</span> {{ item.nome }}</span>
+          <div class="d-flex align-items-center">
+            <span class="fw-bold me-3">R$ {{ item.preco.toFixed(2) }}</span>
+            <button class="btn-del" (click)="removerItem('s', $index)"><i class="bi bi-trash3"></i></button>
+          </div>
+        </div>
+      }
     </div>
 
-    <div class="footer-os">
-      <div class="total-box">
-        <span>VALOR TOTAL:</span>
-        <strong class="valor-total">R$ {{ total().toFixed(2) }}</strong>
+    <div class="resumo-footer">
+      <div class="total-display">
+        <small>TOTAL DA O.S.</small>
+        <strong>R$ {{ total().toFixed(2) }}</strong>
       </div>
-
-      <button type="button" class="btn-save" (click)="salvar()"
-        [disabled]="!clienteId() || !veiculoId() || total() <= 0">
-        <i class="fas fa-save"></i> GRAVAR ORDEM DE SERVIÇO
+      <button class="btn-finalizar" (click)="salvar()" [disabled]="total() <= 0">
+        <i class="bi bi-cloud-check-fill"></i> FINALIZAR E GRAVAR O.S.
       </button>
     </div>
   </div>

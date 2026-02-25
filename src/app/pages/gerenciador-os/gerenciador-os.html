@@ -35,7 +35,7 @@
       <div class="col-md-3">
         <label class="label-custom">STATUS</label>
         <select class="form-select input-custom" [ngModel]="filtroStatus()" (ngModelChange)="filtroStatus.set($event)">
-          <option value="todos">Todos</option>
+          <option value="TODOS">TODOS</option>
           <option value="ABERTO">ABERTO</option>
           <option value="FECHADO">FECHADO</option>
         </select>
@@ -77,7 +77,7 @@
           </td>
           <td class="text-center">
             <button class="btn-action-edit" (click)="prepararEdicao(os)">
-              ✎
+              
               <i class="bi bi-pencil-fill"></i>
             </button>
           </td>

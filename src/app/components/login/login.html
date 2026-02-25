@@ -1,33 +1,68 @@
-<div class="login-container">
-  <div class="login-card">
-    <div class="login-header">
-      <i class="fas fa-user-circle logo-icon"></i>
-      <h2>Acessar Sistema</h2>
-      <p>Entre com suas credenciais</p>
+<div class="container">
+    <div class="row justify-content-center align-items-center min-vh-100">
+        <div class="col-md-6 col-lg-5">
+            <div class="card login-card">
+                <div class="login-header text-center">
+                    <i class="bi bi-shield-lock" style="font-size: 3rem; color: #667eea;"></i>
+                    <h2>Bem-vindo de volta!</h2>
+                    <p>Faça login para acessar sua conta</p>
+                </div>
+                
+                <div class="login-body p-4">
+                    
+                    <form (ngSubmit)="login()">
+                        
+                        <div class="form-floating mb-3">
+                            <input type="text" class="form-control" id="username" name="username"
+                                   [(ngModel)]="username" placeholder="Usuário" required>
+                            <label for="username">Usuário</label>
+                            <i class="bi bi-person position-absolute top-50 end-0 translate-middle-y me-3"></i>
+                        </div>
+                        
+                        <div class="form-floating mb-3">
+                            <input type="password" class="form-control" id="password" name="password"
+                                   [(ngModel)]="password" placeholder="Senha" required>
+                            <label for="password">Senha</label>
+                            <i class="bi bi-lock position-absolute top-50 end-0 translate-middle-y me-3"></i>
+                        </div>
+                        
+                        <div class="d-flex justify-content-between align-items-center mb-4">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="remember">
+                                <label class="form-check-label" for="remember">
+                                    Lembrar-me
+                                </label>
+                            </div>
+                            <a href="#" class="text-decoration-none" style="color: #667eea;">Esqueceu a senha?</a>
+                        </div>
+                        
+                        <button type="submit" class="btn btn-primary w-100 btn-login py-2 shadow-sm">
+                            <i class="bi bi-box-arrow-in-right me-2"></i>
+                            Entrar
+                        </button>
+                    </form>
+                    
+                    <div class="social-login text-center mt-4">
+                        <p class="text-muted small">ou continue com</p>
+                        <div class="social-buttons d-flex justify-content-center gap-3">
+                            <button type="button" class="btn btn-outline-secondary social-btn"><i class="bi bi-google"></i></button>
+                            <button type="button" class="btn btn-outline-secondary social-btn"><i class="bi bi-facebook"></i></button>
+                            <button type="button" class="btn btn-outline-secondary social-btn"><i class="bi bi-github"></i></button>
+                        </div>
+                    </div>
+                    
+                    <div class="signup-link text-center mt-4">
+                        <p class="mb-0">
+                            Não tem uma conta? 
+                            <a routerLink="/register" class="fw-bold text-decoration-none" style="color: #667eea;">Cadastre-se</a>
+                        </p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="text-center mt-3 text-white">
+                <small>&copy; 2026 Sua Oficina JBT. Todos os direitos reservados.</small>
+            </div>
+        </div>
     </div>
-
-    <div class="login-form">
-      <div class="input-group">
-        <label>Usuário</label>
-        <input [(ngModel)]="username" placeholder="Digite seu usuário">
-      </div>
-
-      <div class="input-group">
-        <label>Senha</label>
-        <input [(ngModel)]="password" type="password" placeholder="Digite sua senha">
-      </div>
-
-      <button class="btn-login" (click)="login()">
-        <span>Entrar</span>
-        <i class="fas fa-sign-in-alt"></i>
-      </button>
-
-      <div class="divider"><span>ou</span></div>
-
-      <button class="btn-register" routerLink="/register">
-        <i class="fas fa-user-plus"></i>
-        <span>Criar nova conta</span>
-      </button>
-    </div>
-  </div>
 </div>

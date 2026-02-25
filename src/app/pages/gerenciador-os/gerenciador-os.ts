@@ -24,7 +24,7 @@ export class GerenciadorOsComponent implements OnInit {
 
   // Filtros
   filtroNome = signal('');
-  filtroStatus = signal('todos');
+  filtroStatus = signal('ABERTO');
   dataInicio = signal('');
   dataFim = signal('');
 
@@ -41,7 +41,7 @@ export class GerenciadorOsComponent implements OnInit {
       (os.cliente?.nome || '').toLowerCase().includes(busca) ||
       (os.veiculo?.placa || '').toLowerCase().includes(busca);
 
-    const statusMatch = this.filtroStatus() === 'todos' || String(os.status) === this.filtroStatus();
+    const statusMatch = this.filtroStatus() === 'TODOS' || String(os.status) === this.filtroStatus();
 
     const dataOs = os.data ? new Date(os.data).toISOString().split('T')[0] : '';
     const inicio = this.dataInicio();

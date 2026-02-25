@@ -1,52 +1,175 @@
-/* Fontes e Pesos */
-.fw-900, .fw-black { font-weight: 900; }
+/* --- Variáveis de Cores --- */
+:root {
+  --primary-gradient: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+  --accent-color: #3b82f6;
+  --success-color: #10b981;
+  --warning-color: #f59e0b;
+  --bg-light: #f8fafc;
+}
 
-/* Botão de Edição com Efeito */
+/* --- Geral --- */
+body {
+  background-color: var(--bg-light);
+  font-family: 'Inter', sans-serif;
+}
+
+.fw-black { font-weight: 900; }
+.ls-tight { letter-spacing: -0.025em; }
+
+/* --- Botões Estilizados --- */
+/* --- Botão Nova Ordem (Azul Vibrante) --- */
+.btn-primary-glass {
+  background: linear-gradient(135deg, #0d6efd 0%, #004dc7 100%); /* Azul Royal Sólido */
+  color: #ffffff !important;
+  border: none;
+  border-radius: 12px;
+  padding: 10px 24px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 4px 12px rgba(13, 110, 253, 0.3); /* Sombra azulada */
+  display: inline-flex;
+  align-items: center;
+}
+
+.btn-primary-glass:hover:not(:disabled) {
+  transform: translateY(-3px);
+  background: linear-gradient(135deg, #0b5ed7 0%, #003da1 100%);
+  box-shadow: 0 8px 20px rgba(13, 110, 253, 0.4);
+  filter: brightness(1.1);
+}
+
+.btn-primary-glass:active {
+  transform: translateY(-1px);
+}
+
+.btn-primary-glass i {
+  font-size: 1.1rem;
+}
+
+/* Ajuste para o botão Desabilitado no Modal */
+.btn-primary-glass:disabled {
+  background: #cbd5e1 !important;
+  color: #64748b !important;
+  box-shadow: none;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* --- Filtros --- */
+.label-custom {
+  font-size: 0.7rem;
+  font-weight: 800;
+  color: #64748b;
+  text-transform: uppercase;
+  margin-bottom: 6px;
+  display: block;
+}
+
+.input-custom {
+  border-radius: 10px;
+  border: 1px solid #e2e8f0;
+  padding: 10px 14px;
+  font-size: 0.9rem;
+  transition: all 0.2s;
+}
+
+.input-custom:focus {
+  border-color: var(--accent-color);
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+/* --- Tabela --- */
+.table-card {
+  border-radius: 20px;
+  overflow: hidden;
+  background: white;
+  border: 1px solid rgba(226, 232, 240, 0.8);
+}
+
+.table thead th {
+  background-color: #f1f5f9;
+  color: #475569;
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  border-bottom: 2px solid #e2e8f0;
+}
+
+.table tbody tr {
+  transition: background 0.2s;
+}
+
+.table tbody tr:hover {
+  background-color: #f8fafc;
+}
+
+/* --- Status Badges --- */
+.badge-status {
+  padding: 6px 14px;
+  border-radius: 8px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  display: inline-block;
+}
+
+.status-aberto {
+  background-color: #dcfce7;
+  color: #15803d;
+  border: 1px solid #bbf7d0;
+}
+
+.status-fechado {
+  background-color: #fee2e2;
+  color: #b91c1c;
+  border: 1px solid #fecaca;
+}
+
+/* --- Ações --- */
 .btn-action-edit {
-    width: 38px;
-    height: 38px;
-    border-radius: 10px;
-    border: none;
-    background: #f8f9fa;
-    color: #495057;
-    transition: all 0.2s ease-in-out;
+  background: #eff6ff;
+  color: var(--accent-color);
+  border: none;
+  width: 38px;
+  height: 38px;
+  border-radius: 10px;
+  transition: all 0.2s;
 }
 
 .btn-action-edit:hover {
-    background: #0d6efd;
-    color: white;
-    transform: scale(1.1);
+  background: var(--accent-color);
+  color: white;
+  transform: rotate(15deg);
 }
 
-/* Glassmorphism Botão */
-.btn-primary-glass {
-    background: linear-gradient(135deg, #0d6efd, #0043a4);
-    color: white;
-    border: none;
-    padding: 10px 24px;
-    border-radius: 12px;
-    font-weight: 600;
+/* --- Modal Custom --- */
+.modal-content {
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10px);
 }
 
-/* Badges de Status */
-.badge-status {
-    padding: 6px 15px;
-    border-radius: 50px;
-    font-size: 11px;
-    font-weight: 800;
+.modal-header {
+  background: var(--primary-gradient) !important;
+  border-bottom: none;
 }
-.status-aberto { background: #e0f2fe; color: #0369a1; }
-.status-fechado { background: #f1f5f9; color: #475569; }
 
-/* Tabela */
-.table-card { border-radius: 20px; overflow: hidden; border: 1px solid #f0f0f0; }
-.table thead th { background: #fafafa; font-size: 11px; color: #888; text-transform: uppercase; }
+.bg-light {
+  background-color: #f1f5f9 !important;
+}
 
-/* Estilização Interna do Modal */
-.label-custom { font-size: 10px; font-weight: 900; color: #adb5bd; margin-bottom: 5px; display: block; }
-.input-custom { border-radius: 10px; border: 2px solid #f1f3f5; font-size: 14px; }
+/* Custom Scrollbar para as listas de peças/serviços */
+.overflow-auto::-webkit-scrollbar {
+  width: 6px;
+}
+
+.overflow-auto::-webkit-scrollbar-track {
+  background: #f1f5f9;
+}
+
+.overflow-auto::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 10px;
+}
+
 .pointer { cursor: pointer; }
-
-/* Scrollbar das listas */
-::-webkit-scrollbar { width: 6px; }
-::-webkit-scrollbar-thumb { background: #dee2e6; border-radius: 10px; }

@@ -68,19 +68,17 @@
             </td>
             <td>
               <div class="text-center">
-                <i class="bi bi-person-circle text-primary me-2"></i>
+                <i class="text-primary me-2"></i>
                 <span>{{v.cliente?.nome || 'NÃO ATRIBUÍDO'}}</span>
               </div>
             </td>
             <td class="text-center"><span class="text-muted">{{v.ano}}</span></td>
             <td class="text-center">
               <button class="btn-action-edit me-2" (click)="prepararEdicao(v)">
-                ✎
+                
                 <i class="bi bi-pencil-fill"></i>
               </button>
-              <button class="btn-action-delete" (click)="confirmarExclusao(v.id)">
-                🗑
-                 <i class="bi bi-trash-fill"></i>
+              <button class="btn-action-delete" (click)="confirmarExclusao(v.id)">                       
                 <i class="bi bi-trash-fill"></i>
               </button>
             </td>

@@ -1,43 +1,115 @@
-<div class="crud-container">
-  <div class="card form-card">
-    <h3>{{ editando() ? 'Editar Produto' : 'Novo Produto' }}</h3>
-    <div class="form-grid">
-      <input [(ngModel)]="produtoAtual().nomeProduto" placeholder="Nome do Produto">
-      <input type="number" [(ngModel)]="produtoAtual().precoProduto" placeholder="Preço (R$)">
-      <input type="number" [(ngModel)]="produtoAtual().quantidadeEstoque" placeholder="Qtd em Estoque">
-      <input [(ngModel)]="produtoAtual().descricao" placeholder="Descrição">
+ <body>  
+   <div class="crud-container">
+        <!-- Header ações -->
+        <div class="header-actions">
+            <button class="btn-voltar" routerLink="/dashboard">
+                <i class="bi bi-arrow-left"></i>
+                Voltar
+            </button>
+            <button class="btn-novo" (click)="prepararNovo()">
+                <i class="bi bi-plus-circle"></i>
+                Novo Produto
+            </button>
+        </div>
 
-      <div class="actions">
-        <button class="btn-save" (click)="salvar()">{{ editando() ? 'Atualizar' : 'Cadastrar' }}</button>
-        <button *ngIf="editando()" class="btn-cancel" (click)="resetar()">Cancelar</button>
-      </div>
+        <!-- Card da tabela -->
+        <div class="card table-card">
+            <div class="card-header">
+                <h3><i class="bi bi-box-seam"></i> Inventário de Produtos</h3>
+            </div>
+            <div class="table-responsive">
+                <table>
+                    <thead>
+                        <tr>
+                            <th class="text-center">Produto</th>
+                            <th class="text-center">Descrição</th>
+                            <th class="text-center">Preço</th>
+                            <th class="text-center">Estoque</th>
+                            <th class="text-center">Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Exemplo de linhas estáticas para demonstração -->
+                        <tr>
+                            <td class="text-center"><strong class="text-dark">Pastilha de Freio</strong></td>
+                            <td><div class="text-center desc-container" title="Pastilha de freio cerâmica para Fox 2020">Pastilha de freio cerâmica...</div></td>
+                            <td class="text-center">R$ 89,90</td>
+                            <td class="text-center"><span class="stock-tag low">3 un</span></td>
+                            <td class="text-center">
+                                <div class="btn-group-actions">
+                                    <button class="btn-edit"><i class="bi bi-pencil"></i></button>
+                                    <button class="btn-delete"><i class="bi bi-trash"></i></button>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="text-center"><strong class="text-dark">Filtro de Óleo</strong></td>
+                            <td><div class="text-center desc-container" title="Filtro de óleo motor 1.0">Filtro de óleo motor 1.0</div></td>
+                            <td class="text-center">R$ 25,50</td>
+                            <td class="text-center"><span class="stock-tag mid">12 un</span></td>
+                            <td class="text-center">
+                                <div class="btn-group-actions">
+                                    <button class="btn-edit"><i class="bi bi-pencil"></i></button>
+                                    <button class="btn-delete"><i class="bi bi-trash"></i></button>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="text-center"><strong class="text-dark">Amortecedor Dianteiro</strong></td>
+                            <td><div class="text-center desc-container" title="Amortecedor original GM para Onix">Amortecedor original GM para Onix</div></td>
+                            <td class="text-center">R$ 349,90</td>
+                            <td class="text-center"><span class="stock-tag ok">32 un</span></td>
+                            <td class="text-center">
+                                <div class="btn-group-actions">
+                                    <button class="btn-edit"><i class="bi bi-pencil"></i></button>
+                                    <button class="btn-delete"><i class="bi bi-trash"></i></button>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
     </div>
-  </div>
 
-  <div class="card table-card">
-    <h3>Estoque Atual</h3>
-    <table>
-      <thead>
-        <tr>
-          <th class="text-center">Nome</th>
-          <th class="text-center">Preço</th>
-          <th class="text-center">Estoque</th>
-          <th class="text-center">Ações</th>
-        </tr>
-      </thead>
-      <tbody>
-        @for (p of produtos(); track p.id) {
-        <tr>
-          <td class="text-center">{{ p.nomeProduto }}</td>
-          <td class="text-center">R$ {{ p.precoProduto.toFixed(2) }}</td>
-          <td class="text-center">{{ p.quantidadeEstoque }} un</td>
-          <td class="text-center">
-            <button class="btn-edit" (click)="prepararEdicao(p)">✎</button>
-            <button class="btn-delete" (click)="excluir(p.id)">🗑</button>
-          </td>
-        </tr>
-        }
-      </tbody>
-    </table>
-  </div>
-</div>
+    <!-- Modal (copiado do seu HTML) -->
+    <div class="modal fade" id="modalProduto" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">
+                        <i class="bi bi-plus-circle-fill"></i>
+                        Cadastrar Novo Produto
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="form-grid-modal">
+                        <div class="input-group-custom">
+                            <label>Nome do Produto</label>
+                            <input placeholder="Ex: Pastilha de Freio">
+                        </div>
+                        <div class="row-inputs">
+                            <div class="input-group-custom">
+                                <label>Preço (R$)</label>
+                                <input type="number" placeholder="0,00">
+                            </div>
+                            <div class="input-group-custom">
+                                <label>Estoque</label>
+                                <input type="number" placeholder="Qtd">
+                            </div>
+                        </div>
+                        <div class="input-group-custom">
+                            <label>Descrição Detalhada</label>
+                            <textarea placeholder="Marca, compatibilidade..." rows="3"></textarea>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn-cancel" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="button" class="btn-save">Cadastrar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
