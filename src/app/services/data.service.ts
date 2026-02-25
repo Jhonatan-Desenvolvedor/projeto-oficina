@@ -10,7 +10,7 @@ import { Veiculo } from '../models/Veiculo';
 @Injectable({ providedIn: 'root' })
 export class DataService {
   private http = inject(HttpClient);
-  private readonly API_URL = 'http://localhost:8080/api';
+  private readonly API_URL = 'https://oficinajbt.netlify.app/api';
 
 
   //produtos
