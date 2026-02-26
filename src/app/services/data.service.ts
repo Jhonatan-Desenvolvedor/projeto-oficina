@@ -70,16 +70,16 @@ export class DataService {
 
 
 
-getFaturamentoTotal(inicio?: string, fim?: string) {
-  let url = `${this.API_URL}/ordens-servico/faturamento`;
-  
-  // Se houver datas, adiciona os parâmetros ?inicio=...&fim=...
-  if (inicio && fim) {
-    url += `?inicio=${inicio}&fim=${fim}`;
-  }
+  getFaturamentoTotal(inicio?: string, fim?: string) {
+    let url = `${this.API_URL}/ordens-servico/faturamento`;
 
-  return this.http.get<number>(url, { withCredentials: true });
-}
+    // Se houver datas, adiciona os parâmetros ?inicio=...&fim=...
+    if (inicio && fim) {
+      url += `?inicio=${inicio}&fim=${fim}`;
+    }
+
+    return this.http.get<number>(url, { withCredentials: true });
+  }
 
   // No seu auth.service.ts ou data.service.ts
   limparTokenESair() {

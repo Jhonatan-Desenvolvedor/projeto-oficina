@@ -4,7 +4,6 @@ import { FormsModule } from '@angular/forms';
 import { DataService } from '../../services/data.service';
 import { RouterModule } from '@angular/router';
 
-// A declaração DEVE ficar fora da classe
 declare var bootstrap: any;
 
 @Component({
@@ -18,7 +17,7 @@ export class ProdutoComponent implements OnInit {
   private dataService = inject(DataService);
 
   produtos = signal<any[]>([]);
-  produtoAtual = signal({ id: null, nomeProduto: '', precoProduto: 0, quantidadeEstoque: 0, descricao: '' });
+  produtoAtual = signal<any>({ id: null, nomeProduto: '', precoProduto: 0, quantidadeEstoque: 0, descricao: '' });
   editando = signal(false);
 
   ngOnInit() {
@@ -26,7 +25,9 @@ export class ProdutoComponent implements OnInit {
   }
 
   carregarProdutos() {
-    this.dataService.getProdutos().subscribe(res => this.produtos.set(res));
+    this.dataService.getProdutos().subscribe(res => {
+      this.produtos.set(res);
+    });
   }
 
   prepararNovo() {
@@ -36,7 +37,7 @@ export class ProdutoComponent implements OnInit {
   }
 
   prepararEdicao(p: any) {
-    // Criamos uma cópia para não alterar a linha da tabela em tempo real
+    // Clonamos o objeto para evitar que a alteração no modal reflita na tabela antes de salvar no banco
     this.produtoAtual.set({ ...p });
     this.editando.set(true);
     this.abrirModal();
@@ -47,26 +48,15 @@ export class ProdutoComponent implements OnInit {
 
     if (this.editando() && p.id !== null) {
       this.dataService.updateProduto(p.id, p).subscribe({
-        next: () => {
-          this.sucesso('Produto atualizado!');
-        },
-        error: (err) => console.error(err)
+        next: () => this.sucesso('Produto atualizado com sucesso!'),
+        error: (err) => alert('Erro ao atualizar produto.')
       });
     } else {
       this.dataService.saveProduto(p).subscribe({
-        next: () => {
-          this.sucesso('Produto cadastrado!');
-        },
-        error: (err) => console.error(err)
+        next: () => this.sucesso('Produto cadastrado com sucesso!'),
+        error: (err) => alert('Erro ao cadastrar produto.')
       });
     }
-  }
-
-  private sucesso(mensagem: string) {
-    alert(mensagem);
-    this.fecharModal();
-    this.resetarDados();
-    this.carregarProdutos();
   }
 
   excluir(id: number) {
@@ -75,7 +65,14 @@ export class ProdutoComponent implements OnInit {
     }
   }
 
-  // Métodos do Modal
+  private sucesso(mensagem: string) {
+    this.fecharModal();
+    this.carregarProdutos();
+    // Um pequeno delay para o modal fechar antes do alerta
+    setTimeout(() => alert(mensagem), 300);
+  }
+
+  // --- Lógica do Modal Bootstrap ---
   private abrirModal() {
     const modalElem = document.getElementById('modalProduto');
     if (modalElem) {

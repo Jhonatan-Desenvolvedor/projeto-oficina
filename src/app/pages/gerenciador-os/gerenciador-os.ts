@@ -72,7 +72,7 @@ export class GerenciadorOsComponent implements OnInit {
 
   limparFiltros() {
     this.filtroNome.set('');
-    this.filtroStatus.set('TODOS');
+    this.filtroStatus.set('ABERTO');
     this.dataInicio.set('');
     this.dataFim.set('');
   }
