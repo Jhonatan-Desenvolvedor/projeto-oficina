@@ -17,6 +17,8 @@ export class Dashboard implements OnInit {
   faturamentoTotal = signal<number>(0);
   dataInicio = signal<string>('');
   dataFim = signal<string>('');
+  menuAberto = false;
+  temaEscuro = false;
 
   ngOnInit() {
     this.carregarDados();
@@ -34,6 +36,15 @@ export class Dashboard implements OnInit {
     this.dataInicio.set('');
     this.dataFim.set('');
     this.carregarDados();
+  }
+
+  toggleMenu() {
+    this.menuAberto = !this.menuAberto;
+  }
+
+  toggleTheme() {
+    this.temaEscuro = !this.temaEscuro;
+    document.documentElement.classList.toggle('dark', this.temaEscuro);
   }
 
   logout() {

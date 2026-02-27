@@ -47,7 +47,9 @@ export class DataService {
   deleteOrdemServico(id: number) { return this.http.delete(`${this.API_URL}/ordens-servico/${id}`, { withCredentials: true }); }
 
 
-
+  getDespesas() { return this.http.get<any[]>(`${this.API_URL}/despesas`, { withCredentials: true }); }
+  saveDespesa(d: any) { return this.http.post(`${this.API_URL}/despesas`, d, { withCredentials: true }); }
+  deleteDespesa(id: number) { return this.http.delete(`${this.API_URL}/despesas/${id}`, { withCredentials: true }); }
 
 
 

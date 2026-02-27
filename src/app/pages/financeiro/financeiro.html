@@ -1,0 +1,105 @@
+<div class="container-xl py-4">
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h2 class="fw-black text-dark mb-0 ls-tight">FINANCEIRO</h2>
+    <div class="d-flex gap-2">
+      <button class="btn btn-light rounded-4 shadow-sm px-4 fw-bold border" routerLink="/dashboard">
+        <i class="bi bi-arrow-left me-2"></i>VOLTAR
+      </button>
+    </div>
+  </div>
+
+  <div class="row g-4 mb-4">
+    <div class="col-lg-6">
+      <div class="card shadow-sm border-0 rounded-4 p-3 h-100">
+        <div class="d-flex justify-content-between align-items-center mb-2">
+          <h6 class="fw-bold text-primary mb-0">RECEITAS (O.S. FECHADAS)</h6>
+          <div class="d-flex gap-2">
+            <input type="date" class="form-control form-control-sm input-custom" style="max-width: 140px;"
+              [ngModel]="filtroInicioOs()" (ngModelChange)="filtroInicioOs.set($event)">
+            <input type="date" class="form-control form-control-sm input-custom" style="max-width: 140px;"
+              [ngModel]="filtroFimOs()" (ngModelChange)="filtroFimOs.set($event)">
+          </div>
+        </div>
+        <div class="list-group list-group-flush small" style="max-height: 220px; overflow: auto;">
+          @for (os of ordensFiltradasFechadas(); track os.id) {
+            <div class="list-group-item d-flex justify-content-between">
+              <div>
+                <div class="fw-bold">#{{os.id}} - {{os.cliente?.nome}}</div>
+                <div class="text-muted">{{os.veiculo?.modelo}} ({{os.veiculo?.placa}})</div>
+              </div>
+              <div class="text-end">
+                <div class="fw-bold text-success">{{os.valorTotal | currency:'BRL'}}</div>
+                <div class="text-muted">{{(os.data || '').split('T')[0]}}</div>
+              </div>
+            </div>
+          }
+        </div>
+        <div class="mt-3 d-flex justify-content-between align-items-center">
+          <span class="fw-bold">TOTAL RECEITAS</span>
+          <span class="h5 text-success mb-0">{{ totalOsFechadas() | currency:'BRL' }}</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-lg-6">
+      <div class="card shadow-sm border-0 rounded-4 p-3 h-100">
+        <div class="d-flex justify-content-between align-items-center mb-2">
+          <h6 class="fw-bold text-danger mb-0">DESPESAS</h6>
+          <div class="d-flex gap-2">
+            <input type="date" class="form-control form-control-sm input-custom" style="max-width: 140px;"
+              [ngModel]="filtroInicioDesp()" (ngModelChange)="filtroInicioDesp.set($event)">
+            <input type="date" class="form-control form-control-sm input-custom" style="max-width: 140px;"
+              [ngModel]="filtroFimDesp()" (ngModelChange)="filtroFimDesp.set($event)">
+          </div>
+        </div>
+
+        <div class="row g-2 align-items-end mb-3">
+          <div class="col-md-5">
+            <label class="small text-muted mb-1">Descrição</label>
+            <input type="text" class="form-control input-custom" placeholder="Ex: Energia" [(ngModel)]="novaDespesa().descricao">
+          </div>
+          <div class="col-md-3">
+            <label class="small text-muted mb-1">Data</label>
+            <input type="date" class="form-control input-custom" [(ngModel)]="novaDespesa().data">
+          </div>
+          <div class="col-md-2">
+            <label class="small text-muted mb-1">Valor</label>
+            <input type="number" class="form-control input-custom" [(ngModel)]="novaDespesa().valor" min="0" step="0.01">
+          </div>
+          <div class="col-md-2">
+            <button class="btn btn-danger w-100 mt-4" (click)="adicionarDespesa()">ADD</button>
+          </div>
+        </div>
+
+        <div class="list-group list-group-flush small" style="max-height: 190px; overflow: auto;">
+          @for (d of despesasFiltradas(); track $index) {
+            <div class="list-group-item d-flex justify-content-between align-items-center">
+              <div>
+                <div class="fw-bold">{{d.descricao}}</div>
+                <div class="text-muted">{{d.data}}</div>
+              </div>
+              <div class="d-flex align-items-center gap-2">
+                <span class="fw-bold text-danger">{{d.valor | currency:'BRL'}}</span>
+                <i class="bi bi-trash text-danger pointer" (click)="removerDespesa($index)"></i>
+              </div>
+            </div>
+          }
+        </div>
+
+        <div class="mt-3 d-flex justify-content-between align-items-center">
+          <span class="fw-bold">TOTAL DESPESAS</span>
+          <span class="h5 text-danger mb-0">{{ totalDespesas() | currency:'BRL' }}</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card shadow-sm border-0 rounded-4 p-3">
+    <div class="d-flex justify-content-between align-items-center">
+      <h6 class="fw-bold text-muted mb-0">SALDO (Receitas - Despesas)</h6>
+      <span class="h4 mb-0" [ngClass]="saldo() >= 0 ? 'text-success' : 'text-danger'">
+        {{ saldo() | currency:'BRL' }}
+      </span>
+    </div>
+  </div>
+</div>

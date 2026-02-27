@@ -1,4 +1,4 @@
-<body>
+﻿<body>
   
 
 <div class="crud-container">
@@ -28,24 +28,26 @@
                 </thead>
                 <tbody>
                     @for (p of produtos(); track p.id) {
-                    <tr>
-                        <td class="text-center"><strong class="text-dark">{{p.nomeProduto}}</strong></td>
-                        <td><div class="text-center desc-container" [title]="p.descricao">{{p.descricao}}</div></td>
-                        <td class="text-center">{{p.precoProduto | currency:'BRL'}}</td>
-                        <td class="text-center">
-                            <span class="stock-tag" 
-                                [ngClass]="{'low': p.quantidadeEstoque < 5, 'mid': p.quantidadeEstoque >= 5 && p.quantidadeEstoque < 15, 'ok': p.quantidadeEstoque >= 15}">
-                                {{p.quantidadeEstoque}} un
-                            </span>
-                        </td>
-                        <td class="text-center">
-                            <div class="btn-group-actions">
-                                <button class="btn-edit" (click)="prepararEdicao(p)"><i class="bi bi-pencil"></i></button>
-                                <button class="btn-delete" (click)="excluir(p.id)"><i class="bi bi-trash"></i></button>
-                            </div>
-                        </td>
-                    </tr>
-                    }
+<tr>
+    <td data-label="Produto" class="text-center"><strong class="text-dark">{{p.nomeProduto}}</strong></td>
+    <td data-label="Descrição">
+        <div class="text-center desc-container" [title]="p.descricao">{{p.descricao}}</div>
+    </td>
+    <td data-label="Preço" class="text-center">{{p.precoProduto | currency:'BRL'}}</td>
+    <td data-label="Estoque" class="text-center">
+        <span class="stock-tag" [ngClass]="{'low': p.quantidadeEstoque < 5, 'mid': p.quantidadeEstoque >= 5 && p.quantidadeEstoque < 15, 'ok': p.quantidadeEstoque >= 15}">
+            {{p.quantidadeEstoque}} un
+        </span>
+    </td>
+    <td data-label="Ações" class="text-center">
+        <div class="btn-group-actions">
+            <button class="btn-edit" (click)="prepararEdicao(p)"><i class="bi bi-pencil"></i></button>
+            <button class="btn-delete" (click)="excluir(p.id)"><i class="bi bi-trash"></i></button>
+        </div>
+    </td>
+</tr>
+}
+                    
                 </tbody>
             </table>
         </div>

@@ -4,6 +4,8 @@ import { FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { DataService } from '../../services/data.service'; 
 import { OrdemServico } from '../../models/Os';
+import { Cliente } from '../../models/Cliente';
+import { Veiculo } from '../../models/Veiculo';
 
 declare var bootstrap: any;
 
@@ -18,6 +20,9 @@ export class GerenciadorOsComponent implements OnInit {
   protected readonly String = String;
 
   ordens = signal<OrdemServico[]>([]);
+  clientes = signal<Cliente[]>([]);
+  veiculos = signal<Veiculo[]>([]);
+  veiculosCliente = signal<Veiculo[]>([]);
   carregando = signal(false);
   osSelecionada = signal<OrdemServico | null>(null);
 
@@ -32,6 +37,21 @@ export class GerenciadorOsComponent implements OnInit {
   valorNovoServico = signal<number | null>(null);
   novoProduto = signal('');
   valorNovoProduto = signal<number | null>(null);
+
+  // Criação de nova O.S.
+  novaOs = signal({
+    clienteId: null as number | null,
+    veiculoId: null as number | null,
+    data: new Date().toISOString().split('T')[0],
+    status: 'ABERTO',
+    valorTotal: 0,
+    servicos: [] as string[],
+    produtos: [] as string[],
+  });
+  novoServicoDesc = signal('');
+  novoServicoValor = signal<number | null>(null);
+  novoProdutoDesc = signal('');
+  novoProdutoValor = signal<number | null>(null);
 
   // Lógica de Filtro e Ordenação Decrescente
   ordensFiltradas = computed(() => {
@@ -68,6 +88,8 @@ export class GerenciadorOsComponent implements OnInit {
       next: (dados) => { this.ordens.set(dados); this.carregando.set(false); },
       error: () => this.carregando.set(false)
     });
+    this.dataService.getClientes().subscribe((c) => this.clientes.set(c));
+    this.dataService.getVeiculos().subscribe((v) => this.veiculos.set(v));
   }
 
   limparFiltros() {
@@ -127,14 +149,167 @@ export class GerenciadorOsComponent implements OnInit {
   confirmarUpdate() {
     const os = this.osSelecionada();
     if (os?.id) {
-      this.dataService.updateOrdemServico(os.id, os).subscribe({
+      const payload: OrdemServico = {
+        id: os.id,
+        cliente: { id: os.cliente?.id } as any,
+        veiculo: { id: os.veiculo?.id } as any,
+        servicos: os.servicos || [],
+        produtos: os.produtos || [],
+        valorTotal: Number(os.valorTotal) || 0,
+        status: os.status,
+        data: this.formatDateTime(os.data)
+      };
+
+      this.dataService.updateOrdemServico(os.id, payload).subscribe({
         next: () => { 
           this.carregarOrdens(); 
           this.osSelecionada.set(null);
           alert("O.S. Atualizada!");
+        },
+        error: (err) => {
+          console.error(err);
+          alert('Erro ao atualizar O.S. no servidor.');
         }
       });
     }
+  }
+
+  confirmarExclusao(id: number | undefined) {
+    if (!id) return;
+    const ok = confirm('Deseja realmente excluir esta O.S.? Esta ação não pode ser desfeita.');
+    if (ok) {
+      this.dataService.deleteOrdemServico(Number(id)).subscribe({
+        next: () => this.carregarOrdens(),
+        error: (err) => {
+          console.error('Erro ao excluir OS', err);
+          const msg = err?.error?.message || err?.message || 'Erro ao excluir O.S.';
+          alert(msg);
+        }
+      });
+    }
+  }
+
+  abrirModalNova() {
+    this.resetNovaOs();
+    const modalElem = document.getElementById('modalNovaOs');
+    if (modalElem) {
+      const modal = new bootstrap.Modal(modalElem);
+      modal.show();
+    }
+  }
+
+  onClienteChange(id: number | null) {
+    const atual = this.novaOs();
+    this.novaOs.set({ ...atual, clienteId: id, veiculoId: null });
+    this.veiculosCliente.set([]);
+    if (id) {
+      this.dataService.getVeiculosPorCliente(id).subscribe((vs) => this.veiculosCliente.set(vs));
+    }
+  }
+
+  adicionarServicoNovo() {
+    const desc = this.novoServicoDesc().trim();
+    const valor = this.novoServicoValor();
+    if (!desc || valor === null) return;
+    const item = `${desc} - R$ ${valor.toFixed(2)}`;
+    const atual = this.novaOs();
+    this.novaOs.set({
+      ...atual,
+      servicos: [...atual.servicos, item],
+      valorTotal: Number(atual.valorTotal) + Number(valor)
+    });
+    this.novoServicoDesc.set('');
+    this.novoServicoValor.set(null);
+  }
+
+  adicionarProdutoNovo() {
+    const desc = this.novoProdutoDesc().trim();
+    const valor = this.novoProdutoValor();
+    if (!desc || valor === null) return;
+    const item = `${desc} - R$ ${valor.toFixed(2)}`;
+    const atual = this.novaOs();
+    this.novaOs.set({
+      ...atual,
+      produtos: [...atual.produtos, item],
+      valorTotal: Number(atual.valorTotal) + Number(valor)
+    });
+    this.novoProdutoDesc.set('');
+    this.novoProdutoValor.set(null);
+  }
+
+  removerItemNovo(lista: 'servicos' | 'produtos', index: number) {
+    const atual = this.novaOs();
+    const arr = [...atual[lista]];
+    const itemString = arr[index];
+    const valorStr = itemString.split('R$ ')[1];
+    const valorExtraido = parseFloat(valorStr) || 0;
+    arr.splice(index, 1);
+    this.novaOs.set({
+      ...atual,
+      [lista]: arr,
+      valorTotal: Math.max(0, Number(atual.valorTotal) - valorExtraido)
+    });
+  }
+
+  salvarNovaOs() {
+    const dados = this.novaOs();
+    if (!dados.clienteId || !dados.veiculoId) {
+      alert('Selecione cliente e veículo.');
+      return;
+    }
+
+    const payload: OrdemServico = {
+      cliente: { id: dados.clienteId } as any,
+      veiculo: { id: dados.veiculoId } as any,
+      servicos: dados.servicos || [],
+      produtos: dados.produtos || [],
+      valorTotal: Number(dados.valorTotal) || 0,
+      status: (dados.status as any) || 'ABERTO',
+      data: this.formatDateTime(dados.data)
+    };
+
+    this.dataService.saveOrdemServico(payload).subscribe({
+      next: () => {
+        this.carregarOrdens();
+        this.resetNovaOs();
+        alert('O.S. criada!');
+      },
+      error: (err) => {
+        console.error(err);
+        alert('Erro ao salvar O.S.');
+      }
+    });
+  }
+
+  private resetNovaOs() {
+    this.novaOs.set({
+      clienteId: null,
+      veiculoId: null,
+      data: this.dataHojeBrasilia(),
+      status: 'ABERTO',
+      valorTotal: 0,
+      servicos: [],
+      produtos: []
+    });
+    this.veiculosCliente.set([]);
+    this.novoServicoDesc.set('');
+    this.novoServicoValor.set(null);
+    this.novoProdutoDesc.set('');
+    this.novoProdutoValor.set(null);
+  }
+
+  private formatDateTime(date: string | undefined): string | undefined {
+    if (!date) return undefined;
+    // Se vier só yyyy-MM-dd, adiciona meia-noite
+    if (date.length === 10) return `${date}T00:00:00`;
+    return date;
+  }
+
+  private dataHojeBrasilia(): string {
+    // Usa locale ISO-like (sv-SE) para evitar inversão de dia/mês
+    const str = new Date().toLocaleString('sv-SE', { timeZone: 'America/Sao_Paulo' });
+    // str vem como 'YYYY-MM-DD HH:mm:ss'; pegamos só a parte da data
+    return str.split(' ')[0];
   }
 
   // --- NOVAS FUNÇÕES COM TRATAMENTO DE 'UNDEFINED' ---

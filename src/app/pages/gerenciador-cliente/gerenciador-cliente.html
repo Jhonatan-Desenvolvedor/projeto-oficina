@@ -1,133 +1,150 @@
-<div class="container-xl py-4">
-  <div class="d-flex justify-content-between align-items-center mb-4">
-    <div>
-      <h2 class="fw-black text-dark mb-0">GESTÃO DE CLIENTES</h2>
-      <p class="text-muted small">Visualize e gerencie os proprietários cadastrados</p>
-    </div>
-    <div>
-      <div class="d-flex gap-2">
-      <button class="btn btn-primary-glass shadow" routerLink="/cadastro-cliente">
-        <i class="bi bi-plus-circle-fill me-2"></i>NOVO CLIENTE
-      </button>
+﻿<div class="page-hero mb-4">
+  <div>
+    <p class="eyebrow">Clientes · Frota</p>
+    <h1 class="hero-title">Gestão de Clientes</h1>
+    <p class="muted">Visualize proprietários, seus veículos e cadastre novos clientes.</p>
+  </div>
+  <div class="actions">
+    <button class="btn primary" (click)="abrirModalNovoCliente()"><i class="bi bi-plus-circle-fill"></i> Novo Cliente</button>
+  </div>
+</div>
 
-      <button class="btn btn-light rounded-4 shadow-sm px-4 fw-bold border" routerLink="/dashboard">
-        <i class="bi bi-arrow-left me-2"></i>VOLTAR
-      </button>
-    </div>
-
-    </div>
-    </div>
-
-
-  <div class="row mb-4">
-    <div class="col-md-12">
-      <div class="input-group shadow-sm rounded-4">
-        <span class="input-group-text bg-white border-0 ps-3">
-          <i class="bi bi-search text-muted"></i>
-        </span>
-        <input type="text" class="form-control border-0 py-3" 
-               placeholder="Pesquisar por nome ou CPF..." 
-               [ngModel]="filtroNome()" (ngModelChange)="filtroNome.set($event)">
+<div class="card panel shadow-sm border-0 rounded-4 p-3 mb-4">
+  <div class="row g-3 align-items-center">
+    <div class="col-md-8">
+      <label class="label-custom">Nome ou CPF</label>
+      <div class="input-with-icon">
+        <i class="bi bi-search"></i>
+        <input type="text" class="form-control input-custom" placeholder="Pesquisar..." [ngModel]="filtroNome()" (ngModelChange)="filtroNome.set($event)">
       </div>
     </div>
+    <div class="col-md-4 text-end">
+      <span class="pill">{{ clientesFiltrados().length }} clientes</span>
+    </div>
   </div>
+</div>
 
-  </div>
-
-<div class="container-xl py-4">
-  <div class="d-flex justify-content-between align-items-center mb-4">
-    <h2 class="fw-black text-dark mb-0">CLIENTES & VEÍCULOS</h2>
-    <input type="text" class="form-control input-custom shadow-sm w-25" placeholder="Filtrar cliente..." [ngModel]="filtroNome()" (ngModelChange)="filtroNome.set($event)">
-  </div>
-
-  <div class="table-card shadow-lg bg-white">
+<div class="card table-card shadow-lg border-0 rounded-4">
+  <div class="table-responsive">
     <table class="table align-middle mb-0">
-      <thead class="bg-light">
+      <thead>
         <tr>
-          <th class="ps-4">NOME / ENDEREÇO</th>
-          <th>CONTATO</th>
-          <th>FROTA (QTD)</th>
-          <th class="text-center">AÇÕES</th>
+          <th>Nome / Endereço</th>
+          <th>Contato</th>
+          <th class="text-center">Frota</th>
+          <th class="text-center">Ações</th>
         </tr>
       </thead>
       <tbody>
         @for (c of clientesFiltrados(); track c.id) {
-          <tr>
-            <td class="ps-4">
-              <div class="fw-bold">{{c.nome}}</div>
-              <div class="small text-muted">{{c.endereco}}</div>
-            </td>
-            <td><i class="bi bi-telephone me-2"></i>{{c.telefone}}</td>
-            <td>
-              <span class="badge rounded-pill bg-primary">
-                {{c.veiculos?.length || 0}} Veículos
-              </span>
-            </td>
-            <td class="text-center">
-              <button class="btn-action-edit me-2" (click)="prepararEdicao(c)"><i class="bi bi-pencil"></i></button>
-              <button class="btn-action-delete" (click)="excluirCliente(c.id!)"><i class="bi bi-trash"></i></button>
-            </td>
-          </tr>
+        <tr>
+          <td>
+            <div class="fw-bold text-dark">{{c.nome}}</div>
+            <div class="muted small">{{c.endereco}}</div>
+          </td>
+          <td>
+            <div class="fw-bold">{{c.telefone}}</div>
+            
+          </td>
+          <td class="text-center">
+            <span class="pill frota">{{c.veiculos?.length || 0}} veículos</span>
+          </td>
+          <td class="text-center">
+            <div class="btn-group">
+              <button class="icon-btn edit" (click)="prepararEdicao(c)"><i class="bi bi-pencil"></i></button>
+              <button class="icon-btn delete" (click)="excluirCliente(c.id!)"><i class="bi bi-trash"></i></button>
+            </div>
+          </td>
+        </tr>
         }
       </tbody>
     </table>
   </div>
 </div>
 
+<!-- Modal Novo Cliente -->
+<div class="modal fade" id="modalNovoCliente" tabindex="-1" aria-hidden="true" data-bs-backdrop="static">
+  <div class="modal-dialog modal-md modal-dialog-centered">
+    <div class="modal-content rounded-5 border-0 shadow-lg">
+      <div class="modal-header gradient text-white p-4">
+        <h5 class="modal-title fw-bold">Novo Cliente</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body p-4">
+        <div class="form-grid">
+          <div class="field">
+            <label>Nome</label>
+            <input type="text" class="form-control input-custom" [(ngModel)]="novoCliente().nome">
+          </div>
+          <div class="field">
+            <label>Telefone</label>
+            <input type="text" class="form-control input-custom" [(ngModel)]="novoCliente().telefone">
+          </div>
+          <div class="field">
+            <label>Endereço</label>
+            <input type="text" class="form-control input-custom" [(ngModel)]="novoCliente().endereco">
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer border-0 p-4 bg-light">
+        <button class="btn ghost" data-bs-dismiss="modal">Cancelar</button>
+        <button class="btn primary" [disabled]="!novoCliente().nome || !novoCliente().telefone" (click)="salvarNovoCliente()" data-bs-dismiss="modal">Salvar</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal Edição Cliente -->
 <div class="modal fade" id="modalCliente" tabindex="-1" aria-hidden="true">
   <div class="modal-dialog modal-xl modal-dialog-centered">
     <div class="modal-content rounded-5 border-0 shadow-lg" *ngIf="clienteSelecionado() as c">
-      <div class="modal-header bg-dark text-white p-4">
-        <h5 class="modal-title fw-bold">GESTÃO DO CLIENTE #{{c.id}}</h5>
+      <div class="modal-header gradient text-white p-4">
+        <h5 class="modal-title fw-bold">Gestão do Cliente #{{c.id}}</h5>
         <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
       </div>
-      
       <div class="modal-body p-4">
-        <div class="row">
-          <div class="col-md-4 border-end">
-            <h6 class="fw-bold text-primary mb-3">INFORMAÇÕES PESSOAIS</h6>
-            <div class="mb-3">
-              <label class="label-custom">NOME</label>
+        <div class="row g-4">
+          <div class="col-md-4">
+            <h6 class="fw-bold text-primary mb-3">Informações Pessoais</h6>
+            <div class="field">
+              <label>Nome</label>
               <input type="text" class="form-control input-custom" [(ngModel)]="c.nome">
             </div>
-            <div class="mb-3">
-              <label class="label-custom">ENDEREÇO</label>
+            <div class="field">
+              <label>Endereço</label>
               <input type="text" class="form-control input-custom" [(ngModel)]="c.endereco">
             </div>
-            <div class="mb-3">
-              <label class="label-custom">TELEFONE</label>
+            <div class="field">
+              <label>Telefone</label>
               <input type="text" class="form-control input-custom" [(ngModel)]="c.telefone">
             </div>
           </div>
-
-          <div class="col-md-8 ps-md-4">
-            <h6 class="fw-bold text-primary mb-3">VEÍCULOS VINCULADOS</h6>
-            
-            <div class="row g-2 mb-4 p-3 bg-light rounded-4 border">
+          <div class="col-md-8">
+            <h6 class="fw-bold text-primary mb-3">Veículos Vinculados</h6>
+            <div class="row g-2 mb-3 bg-light p-3 rounded-4 border">
               <div class="col-md-3"><input type="text" class="form-control form-control-sm" placeholder="Marca" [(ngModel)]="novoVeiculo.marca"></div>
               <div class="col-md-3"><input type="text" class="form-control form-control-sm" placeholder="Modelo" [(ngModel)]="novoVeiculo.modelo"></div>
               <div class="col-md-2"><input type="text" class="form-control form-control-sm" placeholder="Placa" [(ngModel)]="novoVeiculo.placa"></div>
               <div class="col-md-2"><input type="number" class="form-control form-control-sm" placeholder="Ano" [(ngModel)]="novoVeiculo.ano"></div>
-              <div class="col-md-2"><button class="btn btn-primary btn-sm w-100" (click)="adicionarVeiculo()">ADD</button></div>
+              <div class="col-md-2"><button class="btn primary w-100 btn-sm" (click)="adicionarVeiculo()">ADD</button></div>
             </div>
-
-            <div class="table-responsive" style="max-height: 250px;">
+            <div class="table-responsive" style="max-height: 260px;">
               <table class="table table-sm align-middle">
                 <thead>
                   <tr class="small text-muted">
-                    <th>MARCA</th>
-                    <th>MODELO</th>
-                    <th>PLACA</th>                    
-                    <th>ANO</th>
+                    <th>Marca</th>
+                    <th>Modelo</th>
+                    <th>Placa</th>
+                    <th>Ano</th>
                   </tr>
                 </thead>
                 <tbody>
                   @for (v of c.veiculos; track $index) {
                     <tr>
-                      <td>{{v.marca}} </td>
+                      <td>{{v.marca}}</td>
                       <td>{{v.modelo}}</td>
-                      <td>{{v.placa}}</td>                      
-                      <td>{{v.ano}}</td>                      
+                      <td>{{v.placa}}</td>
+                      <td>{{v.ano}}</td>
                     </tr>
                   }
                 </tbody>
@@ -136,10 +153,9 @@
           </div>
         </div>
       </div>
-
       <div class="modal-footer border-0 p-4 bg-light">
-        <button class="btn btn-secondary rounded-pill px-4" data-bs-dismiss="modal">CANCELAR</button>
-        <button class="btn btn-primary-glass px-5" (click)="salvarEdicao()" data-bs-dismiss="modal">SALVAR TUDO</button>
+        <button class="btn ghost" data-bs-dismiss="modal">Cancelar</button>
+        <button class="btn primary" (click)="salvarEdicao()" data-bs-dismiss="modal">Salvar Tudo</button>
       </div>
     </div>
   </div>

@@ -18,6 +18,7 @@ export class GerenciadorClientesComponent implements OnInit {
   clientes = signal<Cliente[]>([]);
   filtroNome = signal('');
   clienteSelecionado = signal<any>(null);
+  novoCliente = signal<{ nome: string; telefone: string; endereco: string }>({ nome: '', telefone: '', endereco: '' });
 
   // Inputs para novo veículo dentro do modal
   novoVeiculo = { marca: '', modelo: '', placa: '', ano: null };
@@ -39,6 +40,27 @@ export class GerenciadorClientesComponent implements OnInit {
     this.clienteSelecionado.set(JSON.parse(JSON.stringify(cliente)));
     const modal = new bootstrap.Modal(document.getElementById('modalCliente'));
     modal.show();
+  }
+
+  abrirModalNovoCliente() {
+    this.novoCliente.set({ nome: '', telefone: '', endereco: '' });
+    const modal = new bootstrap.Modal(document.getElementById('modalNovoCliente'));
+    modal.show();
+  }
+
+  salvarNovoCliente() {
+    const c = this.novoCliente();
+    if (!c.nome || !c.telefone) {
+      alert('Preencha nome e telefone.');
+      return;
+    }
+    this.dataService.saveCliente(c as Cliente).subscribe({
+      next: () => {
+        this.carregarClientes();
+        alert('Cliente criado!');
+      },
+      error: (err) => console.error('Erro ao criar cliente', err)
+    });
   }
 
   // Adiciona veículo à lista local do cliente antes de salvar no banco

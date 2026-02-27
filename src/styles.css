@@ -1,10 +1,60 @@
-/* Aplicando a fonte em todo o projeto */
+:root {
+  --light1: #dfe3e7;
+  --light2: #0f172a;
+  
+}
+
+:root.dark {
+  color-scheme: dark;
+  --light2: #f6f8fb;
+  --light1: #0f172a;
+}
+
+/* Fonte e fundo global */
 body {
   font-family: 'Inter', sans-serif;
-  background-color: #f8f9fa; /* Um cinza bem clarinho padrão de sistemas modernos */
+  background-color: var(--light1);
+  color: var(--light2);
   margin: 0;
   padding: 0;
 }
+
+p, span, label, h1, h2, h3, h4, h5, h6 { color: var(--light2); }
+.text-muted, .muted { color: var(--light2) !important; }
+
+/* Cartões genéricos */
+.card, .panel, .table-card {
+  background: var(--light1);
+  border-color: var(--light2);
+}
+
+.table thead th {
+  background: var(--light1);
+  color: var(--light2);
+}
+
+.list-group-item {
+  background: var(--light1);
+  border-color: var(--light2);
+  color: var(--light2);
+}
+
+/* Form controls globais */
+input, textarea, select, .form-control, .form-select {
+  background: var(--light1);
+  color: var(--light2);
+  border-color: var(--light2);
+}
+input:focus, textarea:focus, select:focus,
+.form-control:focus, .form-select:focus {
+  outline: none;
+  border-color: var(--light2);
+  box-shadow: 0 0 0 3px rgba(59,130,246,0.12);
+}
+
+/* Modais e tabelas */
+.modal-content { background: var(--light1); color: var(--light2); border-color: var(--light2); }
+table { color: var(--light2); }
 
 /* Criando uma classe de centralização que você pode usar no app.component.html */
 .main-container {

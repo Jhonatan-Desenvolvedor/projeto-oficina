@@ -1,4 +1,4 @@
-import { Component, OnInit, signal, computed } from '@angular/core';
+﻿import { Component, OnInit, signal, computed } from '@angular/core';
 
 import { FormsModule } from '@angular/forms';
 import { DataService } from '../../services/data.service';
@@ -21,6 +21,14 @@ export class GerenciadorVeiculosComponent implements OnInit {
   clientes = signal<Cliente[]>([]);
   filtroPlaca = signal('');
   veiculoSelecionado = signal<any>(null);
+  veiculoNovo = signal<{ clienteId: number | null; marca: string; modelo: string; placa: string; ano: number; cor: string }>({
+    clienteId: null,
+    marca: '',
+    modelo: '',
+    placa: '',
+    ano: new Date().getFullYear(),
+    cor: ''
+  });
 
   veiculosFiltrados = computed(() => {
     const busca = this.filtroPlaca().toUpperCase();
@@ -41,8 +49,53 @@ export class GerenciadorVeiculosComponent implements OnInit {
     this.dataService.getClientes().subscribe(c => this.clientes.set(c));
   }
 
+  abrirModalNovo() {
+    this.resetNovoVeiculo();
+    const modal = new bootstrap.Modal(document.getElementById('modalNovoVeiculo'));
+    modal.show();
+  }
+
+  salvarNovoVeiculo() {
+    const novo = this.veiculoNovo();
+    if (!novo.clienteId) {
+      alert('Selecione um cliente para vincular.');
+      return;
+    }
+
+    const payload: Veiculo = {
+      marca: novo.marca,
+      modelo: novo.modelo,
+      placa: (novo.placa || '').toUpperCase(),
+      ano: Number(novo.ano),
+      cor: novo.cor
+    };
+
+    this.dataService.saveVeiculoComCliente(novo.clienteId, payload).subscribe({
+      next: () => {
+        this.carregarDados();
+        this.resetNovoVeiculo();
+        alert('Veículo cadastrado!');
+      },
+      error: () => alert('Erro ao cadastrar veículo.')
+    });
+  }
+
+  private resetNovoVeiculo() {
+    this.veiculoNovo.set({
+      clienteId: null,
+      marca: '',
+      modelo: '',
+      placa: '',
+      ano: new Date().getFullYear(),
+      cor: ''
+    });
+  }
+
   prepararEdicao(veiculo: Veiculo) {
-    this.veiculoSelecionado.set(JSON.parse(JSON.stringify(veiculo)));
+    const copia = JSON.parse(JSON.stringify(veiculo));
+    // garante campo clienteId simples para o payload
+    copia.clienteId = veiculo.cliente?.id ?? (veiculo as any).clienteId ?? null;
+    this.veiculoSelecionado.set(copia);
     const modal = new bootstrap.Modal(document.getElementById('modalVeiculo'));
     modal.show();
   }
@@ -50,7 +103,17 @@ export class GerenciadorVeiculosComponent implements OnInit {
   salvarEdicao() {
     const v = this.veiculoSelecionado();
     if (v && v.id) {
-      this.dataService.updateVeiculo(v.id, v).subscribe({
+      const payload: any = {
+        marca: v.marca,
+        modelo: v.modelo,
+        placa: (v.placa || '').toUpperCase(),
+        ano: Number(v.ano),
+        cor: v.cor
+      };
+      if (v.clienteId || v.cliente?.id) {
+        payload.clienteId = v.clienteId || v.cliente?.id;
+      }
+      this.dataService.updateVeiculo(v.id, payload).subscribe({
         next: () => {
           this.carregarDados();
           alert('Veículo atualizado!');
@@ -65,4 +128,6 @@ export class GerenciadorVeiculosComponent implements OnInit {
       this.dataService.deleteVeiculo(id).subscribe(() => this.carregarDados());
     }
   }
+
+  
 }

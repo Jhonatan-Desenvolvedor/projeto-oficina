@@ -1,4 +1,4 @@
-        body {
+﻿        body {
             font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
             background: linear-gradient(145deg, #0b2447 0%, #19335a 100%);
             min-height: 100vh;
@@ -31,7 +31,8 @@
             flex-wrap: wrap;
         }
 
-        .btn-voltar, .btn-novo {
+        .btn-voltar,
+        .btn-novo {
             display: inline-flex;
             align-items: center;
             gap: 0.6rem;
@@ -99,7 +100,7 @@
             display: flex;
             align-items: center;
             gap: 0.75rem;
-            border-bottom: 1px solid rgba(255,255,255,0.1);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
         }
 
         .card-header h3 {
@@ -113,7 +114,7 @@
 
         .card-header i {
             font-size: 1.6rem;
-            filter: drop-shadow(0 2px 4px rgba(0,0,0,0.2));
+            filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2));
         }
 
         /* Tabela responsiva */
@@ -131,10 +132,12 @@
             width: 8px;
             height: 8px;
         }
+
         .table-responsive::-webkit-scrollbar-track {
             background: #e2e8f0;
             border-radius: 10px;
         }
+
         .table-responsive::-webkit-scrollbar-thumb {
             background: linear-gradient(135deg, #3b82f6, #2563eb);
             border-radius: 10px;
@@ -151,7 +154,7 @@
             position: sticky;
             top: 0;
             z-index: 10;
-            box-shadow: 0 2px 6px rgba(0,0,0,0.03);
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.03);
         }
 
         thead th {
@@ -224,8 +227,15 @@
         }
 
         @keyframes fadeIn {
-            from { opacity: 0; transform: translateX(-50%) translateY(5px); }
-            to { opacity: 1; transform: translateX(-50%) translateY(0); }
+            from {
+                opacity: 0;
+                transform: translateX(-50%) translateY(5px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateX(-50%) translateY(0);
+            }
         }
 
         /* Tags de estoque modernas */
@@ -238,7 +248,7 @@
             min-width: 80px;
             text-align: center;
             letter-spacing: 0.02em;
-            box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
         }
 
         .stock-tag.low {
@@ -266,7 +276,8 @@
             justify-content: center;
         }
 
-        .btn-edit, .btn-delete {
+        .btn-edit,
+        .btn-delete {
             width: 38px;
             height: 38px;
             border: none;
@@ -280,7 +291,7 @@
             border: 1px solid #e2e8f0;
             color: #475569;
             font-size: 1rem;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.02);
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.02);
         }
 
         .btn-edit:hover {
@@ -304,6 +315,7 @@
             transition: transform 0.2s ease-out;
             transform: scale(0.95) translateY(-20px);
         }
+
         .modal.show .modal-dialog {
             transform: scale(1) translateY(0);
         }
@@ -312,7 +324,7 @@
             border: none;
             border-radius: 2rem;
             overflow: hidden;
-            background: rgba(255,255,255,0.95);
+            background: rgba(255, 255, 255, 0.95);
             backdrop-filter: blur(15px);
             -webkit-backdrop-filter: blur(15px);
             box-shadow: 0 30px 60px -15px #0f172a;
@@ -411,7 +423,8 @@
         }
 
         /* Botões do modal */
-        .btn-cancel, .btn-save {
+        .btn-cancel,
+        .btn-save {
             padding: 0.7rem 2rem;
             border-radius: 3rem;
             font-weight: 600;
@@ -455,34 +468,205 @@
             .crud-container {
                 padding: 1.2rem;
             }
+
             .header-actions {
                 flex-direction: column;
                 align-items: stretch;
             }
-            .btn-voltar, .btn-novo {
+
+            .btn-voltar,
+            .btn-novo {
                 justify-content: center;
             }
+
             .card-header h3 {
                 font-size: 1.2rem;
             }
+
             .row-inputs {
                 grid-template-columns: 1fr;
             }
+
             thead th {
                 font-size: 0.7rem;
                 padding: 1rem 0.6rem;
             }
+
             tbody td {
                 padding: 1rem 0.6rem;
                 font-size: 0.85rem;
             }
+
             .stock-tag {
                 padding: 0.3rem 0.8rem;
                 min-width: 65px;
                 font-size: 0.7rem;
             }
-            .btn-edit, .btn-delete {
+
+            .btn-edit,
+            .btn-delete {
                 width: 34px;
                 height: 34px;
+            }
+
+            .input-group-custom input,
+            .input-group-custom textarea {
+                width: 100%;
+                padding: 8px;
+                border: 1px solid #ccc;
+                border-radius: 4px;
+                box-sizing: border-box;
+                /* Essencial para o padding não "empurrar" o input pra fora */
+            }
+
+            .btn-group-actions {
+                display: flex;
+                justify-content: center;
+                gap: 5px;
+            }
+
+            /* Ajuste do Grid do Modal */
+            .form-grid-modal {
+                display: flex;
+                flex-direction: column;
+                gap: 15px;
+            }
+
+            .row-inputs {
+                display: flex;
+                gap: 15px;
+            }
+
+            /* Quando a tela for menor que 576px (celulares) */
+            @media (max-width: 576px) {
+                .row-inputs {
+                    flex-direction: column;
+                    /* Empilha Preço e Estoque */
+                    gap: 15px;
+                }
+
+                .modal-footer {
+                    flex-direction: column-reverse;
+                    /* Botão salvar em cima do cancelar */
+                }
+
+                .modal-footer button {
+                    width: 100%;
+                    margin: 5px 0;
+                }
+            }
+
+            /* Garante que o container não transborde */
+            .crud-container {
+                width: 100%;
+                padding: 10px;
+                box-sizing: border-box;
+            }
+
+            /* Scroll suave para a tabela em telas pequenas */
+            .table-responsive {
+                overflow-x: auto;
+                -webkit-overflow-scrolling: touch;
+            }
+
+            /* Evita que o texto da descrição estique a tabela infinitamente */
+            .desc-container {
+                max-width: 200px;
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+            }
+
+            @media (max-width: 768px) {
+                .header-actions {
+                    display: flex;
+                    flex-direction: column;
+                    gap: 10px;
+                }
+
+                .btn-voltar,
+                .btn-novo {
+                    width: 100%;
+                    /* Botões ocupam largura total no celular */
+                }
+
+                .desc-container {
+                    max-width: 120px;
+                }
+            }
+
+            @media (max-width: 480px) {
+                .crud-container {
+                    padding: 1rem 0.5rem;
+                    background: transparent;
+                    /* Remove o fundo do container pai */
+                    box-shadow: none;
+                    /* Remove sombra pesada no mobile */
+                    border: none;
+                }
+
+                .card {
+                    margin: 0;
+                    /* Faz o card ocupar a largura total do dispositivo */
+                }
+            }
+
+            @media (max-width: 768px) {
+
+                /* Esconde o cabeçalho da tabela original */
+                thead {
+                    display: none;
+                }
+
+                /* Transforma cada linha (tr) em um card individual */
+                tbody tr {
+                    display: block;
+                    margin-bottom: 1.5rem;
+                    border: 1px solid #e2e8f0;
+                    border-radius: 1.2rem;
+                    background: #ffffff;
+                    padding: 1rem;
+                    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+                }
+
+                /* Faz cada célula (td) se comportar como uma linha de dados */
+                tbody td {
+                    display: flex;
+                    justify-content: space-between;
+                    align-items: center;
+                    padding: 0.6rem 0.5rem !important;
+                    border-bottom: 1px dashed #f1f5f9;
+                    text-align: right !important;
+                }
+
+                tbody td:last-child {
+                    border-bottom: none;
+                    margin-top: 0.5rem;
+                    justify-content: center;
+                    /* Centraliza as ações (editar/excluir) */
+                }
+
+                /* Adiciona o rótulo (label) antes do conteúdo usando data-attributes ou pseudo-elementos */
+                /* Se você não quiser mudar o HTML, usamos este truque de CSS: */
+                tbody td::before {
+                    content: attr(data-label);
+                    /* Requer adicionar data-label no seu HTML */
+                    font-weight: 700;
+                    text-transform: uppercase;
+                    font-size: 0.7rem;
+                    color: #64748b;
+                    text-align: left;
+                }
+
+                /* Ajuste para a descrição e nome não quebrarem o layout */
+                .desc-container {
+                    max-width: 100% !important;
+                    white-space: normal;
+                    text-align: right;
+                }
+
+                .text-center {
+                    text-align: right !important;
+                }
             }
         }

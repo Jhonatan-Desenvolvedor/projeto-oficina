@@ -1,60 +1,67 @@
-<div class="container-xl py-4">
-  <div class="d-flex justify-content-between align-items-center mb-4">
-    <h2 class="fw-black text-dark mb-0 ls-tight">GERENCIAMENTO DE O.S.</h2>
-    
-    <div class="d-flex gap-2">
-      <button class="btn btn-primary-glass shadow" routerLink="/cadastro-os">
-        <i class="bi bi-plus-circle-fill me-2"></i>NOVA ORDEM
-      </button>
+﻿<body>
+  
 
-      <button class="btn btn-light rounded-4 shadow-sm px-4 fw-bold border" routerLink="/dashboard">
-        <i class="bi bi-arrow-left me-2"></i>VOLTAR
-      </button>
-    </div>
+<div class="page-hero mb-4">
+  <div>
+    <p class="eyebrow text-uppercase mb-1">Oficina · Ordens de Serviço</p>
+    <h1 class="hero-title">Gerenciamento de O.S.</h1>
+    <p class="text-muted">Visualize, filtre e edite ordens de serviço com rapidez.</p>
   </div>
+  <div class="d-flex gap-2 flex-wrap">
+    <button class="btn btn-primary-glass shadow" (click)="abrirModalNova()">
+      <i class="bi bi-plus-circle-fill me-2"></i>NOVA ORDEM
+    </button>
+  </div>
+</div>
 
-  <div class="card border-0 shadow-sm p-4 mb-4 bg-white rounded-4">
-    <div class="row g-3 align-items-end">
-      <div class="col-md-3">
-        <label class="label-custom">CLIENTE OU PLACA</label>
-        <input type="text" class="form-control input-custom" [ngModel]="filtroNome()"
-          (ngModelChange)="filtroNome.set($event)" placeholder="Pesquisar...">
-      </div>
-      <div class="col-md-4">
-        <label class="label-custom">PERÍODO (INÍCIO - FIM)</label>
-        <div class="input-group">
-          <input type="date" class="form-control input-custom" [ngModel]="dataInicio()"
-            (ngModelChange)="dataInicio.set($event)">
-          <input type="date" class="form-control input-custom" [ngModel]="dataFim()"
-            (ngModelChange)="dataFim.set($event)">
-        </div>
-      </div>
-      <div class="col-md-3">
-        <label class="label-custom">STATUS</label>
-        <select class="form-select input-custom" [ngModel]="filtroStatus()" (ngModelChange)="filtroStatus.set($event)">
-          <option value="TODOS">TODOS</option>
-          <option value="ABERTO">ABERTO</option>
-          <option value="FECHADO">FECHADO</option>
-        </select>
-      </div>
-      <div class="col-md-2">
-        <button class="btn btn-light w-100 rounded-pill border fw-bold text-muted py-2" (click)="limparFiltros()">
-          LIMPAR
-        </button>
+<div class="card panel shadow-sm border-0 rounded-4 p-3 mb-4">
+  <div class="row g-3 align-items-end">
+    <div class="col-lg-3 col-md-4">
+      <label class="label-custom">CLIENTE OU PLACA</label>
+      <div class="input-with-icon">
+        <i class="bi bi-search"></i>
+        <input type="text" class="form-control input-custom" [ngModel]="filtroNome()" (ngModelChange)="filtroNome.set($event)" placeholder="Buscar...">
       </div>
     </div>
+    <div class="col-lg-4 col-md-5">
+      <label class="label-custom">PERÍODO</label>
+      <div class="row g-2">
+        <div class="col-6"><input type="date" class="form-control input-custom" [ngModel]="dataInicio()" (ngModelChange)="dataInicio.set($event)"></div>
+        <div class="col-6"><input type="date" class="form-control input-custom" [ngModel]="dataFim()" (ngModelChange)="dataFim.set($event)"></div>
+      </div>
+    </div>
+    <div class="col-lg-3 col-md-3">
+      <label class="label-custom">STATUS</label>
+      <select class="form-select input-custom" [ngModel]="filtroStatus()" (ngModelChange)="filtroStatus.set($event)">
+        <option value="TODOS">Todos</option>
+        <option value="ABERTO">Aberto</option>
+        <option value="FECHADO">Fechado</option>
+      </select>
+    </div>
+    <div class="col-lg-2 col-md-12">
+      <button class="btn btn-outline-secondary w-100 rounded-pill fw-bold" (click)="limparFiltros()">Limpar</button>
+    </div>
   </div>
+</div>
 
-  <div class="table-card shadow-lg bg-white">
+<div class="card table-card shadow-lg border-0 rounded-4">
+  <div class="card-header bg-white border-0 d-flex justify-content-between align-items-center px-4 py-3">
+    <div>
+      <p class="eyebrow text-uppercase mb-1">Lista</p>
+      <h6 class="mb-0 fw-bold text-dark">Ordens de Serviço</h6>
+    </div>
+    <span class="badge bg-soft-primary text-primary px-3 py-2">{{ ordensFiltradas().length }} registros</span>
+  </div>
+  <div class="table-responsive">
     <table class="table align-middle mb-0">
       <thead>
         <tr>
           <th class="ps-4 py-3">ID</th>
-          <th class="py-3">CLIENTE / VEÍCULO</th>
-          <th class="py-3">DATA</th>
-          <th class="py-3">VALOR TOTAL</th>
-          <th class="py-3 text-center">STATUS</th>
-          <th class="py-3 text-center">AÇÕES</th>
+          <th class="py-3">Cliente / Veículo</th>
+          <th class="py-3">Data</th>
+          <th class="py-3">Valor</th>
+          <th class="py-3 text-center">Status</th>
+          <th class="py-3 text-center">Ações</th>
         </tr>
       </thead>
       <tbody>
@@ -62,10 +69,10 @@
         <tr>
           <td class="ps-4 fw-bold text-primary">#{{os.id}}</td>
           <td>
-            <div class="fw-bold">{{os.cliente.nome}}</div>
-            <div class="small text-muted">{{os.veiculo.modelo}} ({{os.veiculo.placa}})</div>
+            <div class="fw-bold text-dark">{{os.cliente.nome}}</div>
+            <div class="text-muted small">{{os.veiculo.modelo}} ({{os.veiculo.placa}})</div>
           </td>
-          <td class="small">{{os.data | date:'dd/MM/yyyy'}}</td>
+          <td class="small text-muted">{{os.data | date:'dd/MM/yyyy'}}</td>
           <td class="fw-bold">{{os.valorTotal | currency:'BRL'}}</td>
           <td class="text-center">
             <span class="badge-status" [ngClass]="String(os.status) === 'ABERTO' ? 'status-aberto' : 'status-fechado'">
@@ -73,9 +80,10 @@
             </span>
           </td>
           <td class="text-center">
-            <button class="btn-action-edit" (click)="prepararEdicao(os)">
-              <i class="bi bi-pencil-fill"></i>
-            </button>
+            <div class="d-inline-flex gap-2">
+              <button class="btn-action-edit" (click)="prepararEdicao(os)"><i class="bi bi-pencil-fill"></i></button>
+              <button class="btn-action-delete" (click)="confirmarExclusao(os.id)"><i class="bi bi-trash-fill"></i></button>
+            </div>
           </td>
         </tr>
         }
@@ -84,10 +92,105 @@
   </div>
 </div>
 
+<!-- Modal Nova OS -->
+<div class="modal fade" id="modalNovaOs" tabindex="-1" aria-hidden="true" data-bs-backdrop="static">
+  <div class="modal-dialog modal-xl modal-dialog-centered">
+    <div class="modal-content rounded-5 border-0 shadow-lg">
+      <div class="modal-header gradient text-white p-4">
+        <h5 class="modal-title fw-bold">NOVA ORDEM DE SERVIÇO</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body p-4">
+        <div class="row g-3 mb-3">
+          <div class="col-md-5">
+            <label class="label-custom">CLIENTE</label>
+            <select class="form-select input-custom" [ngModel]="novaOs().clienteId" (ngModelChange)="onClienteChange($event)">
+              <option [ngValue]="null" disabled>Selecione...</option>
+              @for (c of clientes(); track c.id) {
+                <option [ngValue]="c.id">{{c.nome}} - {{c.telefone}}</option>
+              }
+            </select>
+          </div>
+          <div class="col-md-5">
+            <label class="label-custom">VEÍCULO</label>
+            <select class="form-select input-custom" [(ngModel)]="novaOs().veiculoId">
+              <option [ngValue]="null" disabled>Selecione...</option>
+              @for (v of veiculosCliente(); track v.id) {
+                <option [ngValue]="v.id">{{v.modelo}} ({{v.placa}})</option>
+              }
+            </select>
+          </div>
+          <div class="col-md-2">
+            <label class="label-custom">DATA</label>
+            <input type="date" class="form-control input-custom" [(ngModel)]="novaOs().data">
+          </div>
+        </div>
+
+        <div class="row g-4">
+          <div class="col-md-6">
+            <h6 class="fw-bold text-success small">SERVIÇOS</h6>
+            <div class="input-group mb-2">
+              <input type="text" class="form-control input-custom" placeholder="Descrição" [ngModel]="novoServicoDesc()" (ngModelChange)="novoServicoDesc.set($event)">
+              <input type="number" class="form-control input-custom w-25" placeholder="R$" [ngModel]="novoServicoValor()" (ngModelChange)="novoServicoValor.set($event)">
+              <button class="btn btn-success" (click)="adicionarServicoNovo()">+</button>
+            </div>
+            <div class="list-group list-group-flush border rounded-3 overflow-auto" style="max-height: 150px;">
+              @for (s of novaOs().servicos; track $index) {
+              <div class="list-group-item d-flex justify-content-between align-items-center py-1 small">
+                {{s}} <i class="bi bi-trash text-danger pointer" (click)="removerItemNovo('servicos', $index)"></i>
+              </div>
+              }
+            </div>
+          </div>
+
+          <div class="col-md-6">
+            <h6 class="fw-bold text-warning small">PEÇAS</h6>
+            <div class="input-group mb-2">
+              <input type="text" class="form-control input-custom" placeholder="Peça" [ngModel]="novoProdutoDesc()" (ngModelChange)="novoProdutoDesc.set($event)">
+              <input type="number" class="form-control input-custom w-25" placeholder="R$" [ngModel]="novoProdutoValor()" (ngModelChange)="novoProdutoValor.set($event)">
+              <button class="btn btn-warning text-white" (click)="adicionarProdutoNovo()">+</button>
+            </div>
+            <div class="list-group list-group-flush border rounded-3 overflow-auto" style="max-height: 150px;">
+              @for (p of novaOs().produtos; track $index) {
+              <div class="list-group-item d-flex justify-content-between align-items-center py-1 small">
+                {{p}} <i class="bi bi-trash text-danger pointer" (click)="removerItemNovo('produtos', $index)"></i>
+              </div>
+              }
+            </div>
+          </div>
+        </div>
+
+        <div class="row mt-4 g-3">
+          <div class="col-md-4">
+            <div class="summary-card text-center">
+              <p class="label-custom mb-1">VALOR TOTAL</p>
+              <h3 class="fw-900 text-primary mb-0">{{novaOs().valorTotal | currency:'BRL'}}</h3>
+            </div>
+          </div>
+          <div class="col-md-3">
+            <label class="label-custom">STATUS</label>
+            <select class="form-select input-custom" [(ngModel)]="novaOs().status">
+              <option value="ABERTO">ABERTO</option>
+              <option value="FECHADO">FECHADO</option>
+            </select>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer p-4 bg-light">
+        <button class="btn btn-secondary rounded-pill px-4" data-bs-dismiss="modal">CANCELAR</button>
+        <button class="btn btn-primary-glass px-5" [disabled]="!novaOs().clienteId || !novaOs().veiculoId" (click)="salvarNovaOs()" data-bs-dismiss="modal">
+          SALVAR O.S.
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal Editar OS -->
 <div class="modal fade" id="modalEditar" tabindex="-1" aria-hidden="true" data-bs-backdrop="static">
   <div class="modal-dialog modal-xl modal-dialog-centered">
     <div class="modal-content rounded-5 shadow-lg border-0 overflow-hidden" *ngIf="osSelecionada() as os">
-      <div class="modal-header bg-dark text-white p-4">
+      <div class="modal-header gradient text-white p-4">
         <h5 class="modal-title fw-bold">EDITAR O.S. #{{os.id}}</h5>
         <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
       </div>
@@ -109,7 +212,7 @@
           </div>
           <div class="col-md-6 ps-md-4">
             <h6 class="text-primary fw-bold mb-3 small">DADOS DO VEÍCULO</h6>
-            <div class="row">
+            <div class="row text-uppercase">
               <div class="col-3">
                 <p class="mb-0 small text-muted">MARCA</p>
                 <p class="fw-bold mb-0">{{os.veiculo.marca}}</p>
@@ -136,8 +239,7 @@
               <label class="label-custom">VALOR TOTAL</label>
               <h3 class="fw-900 text-primary mb-4">{{os.valorTotal | currency:'BRL'}}</h3>
               <label class="label-custom">STATUS DA O.S.</label>
-              <select class="form-select input-custom" [ngModel]="os.status"
-                (ngModelChange)="osSelecionada.set({...os, status: $event})">
+              <select class="form-select input-custom" [ngModel]="os.status" (ngModelChange)="osSelecionada.set({...os, status: $event})">
                 <option value="ABERTO">ABERTO</option>
                 <option value="FECHADO">FECHADO</option>
               </select>
@@ -196,12 +298,12 @@
           <button type="button" class="btn btn-secondary rounded-pill px-4" data-bs-dismiss="modal">
             CANCELAR
           </button>
-          <button type="button" class="btn btn-primary-glass px-5" (click)="confirmarUpdate()"
-            [disabled]="String(osSelecionada()?.status) === 'FECHADO'" data-bs-dismiss="modal">
-            {{ String(osSelecionada()?.status) === 'FECHADO' ? 'O.S. ENCERRADA' : 'SALVAR' }}
+          <button type="button" class="btn btn-primary-glass px-5" (click)="confirmarUpdate()" data-bs-dismiss="modal">
+            SALVAR
           </button>
         </div>
       </div>
     </div>
   </div>
 </div>
+</body>
